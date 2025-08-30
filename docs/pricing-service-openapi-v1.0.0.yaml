@@ -1,0 +1,106 @@
+openapi: 3.0.3
+info:
+  title: Pricing Service API
+  description: API de comercio electrónico paraque gestiona las tarifas aplicables a un producto de una cadena.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /prices:
+    get:
+      summary: Consulta el precio aplicable a un producto de una cadena en una fecha dada.
+      parameters:
+        - in: query
+          name: applicationDate
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: Fecha de aplicación (ISO 8601).
+        - in: query
+          name: productId
+          required: true
+          schema:
+            type: integer
+          description: Identificador del producto.
+        - in: query
+          name: brandId
+          required: true
+          schema:
+            type: integer
+          description: Identificador de la cadena (brand).
+      responses:
+        "200":
+          description: Precio encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Price"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    Price:
+      type: object
+      properties:
+        productId:
+          type: integer
+          example: 35455
+        brandId:
+          type: integer
+          example: 1
+        priceList:
+          type: integer
+          description: Identificador de la tarifa de precios aplicable
+          example: 2
+        startDate:
+          type: string
+          format: date-time
+          example: "2020-06-14T15:00:00Z"
+        endDate:
+          type: string
+          format: date-time
+          example: "2020-06-14T18:30:00Z"
+        price:
+          type: number
+          format: float
+          example: 25.45
+        currency:
+          type: string
+          example: EUR
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-08-30T12:34:56Z"
+        status:
+          type: integer
+          example: 404
+        error:
+          type: string
+          example: Not Found
+        message:
+          type: string
+          example: No se encontró un precio aplicable
+        path:
+          type: string
+          example: /prices
