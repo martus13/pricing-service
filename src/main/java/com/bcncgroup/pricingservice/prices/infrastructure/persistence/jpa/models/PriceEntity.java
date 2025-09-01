@@ -21,10 +21,10 @@ public class PriceEntity {
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "BRAND_ID", nullable = false)
-    private Integer brandId;
+    private Long brandId;
 
     @Column(name = "START_DATE", nullable = false)
     private LocalDateTime startDate;
@@ -33,13 +33,13 @@ public class PriceEntity {
     private LocalDateTime endDate;
 
     @Column(name = "PRICE_LIST", nullable = false)
-    private Integer priceList;
+    private Long priceList;
 
     @Column(name = "PRODUCT_ID", nullable = false)
-    private Integer productId;
+    private Long productId;
 
     @Column(name = "PRIORITY", nullable = false)
-    private Integer priority;
+    private Long priority;
 
     @Column(name = "PRICE", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;

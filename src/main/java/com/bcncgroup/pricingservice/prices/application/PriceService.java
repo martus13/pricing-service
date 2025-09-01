@@ -13,7 +13,7 @@ public class PriceService {
 
     private final PriceRepository priceRepository;
 
-    public Price findPrice(LocalDateTime applicationDate, Integer productId, Integer brandId) {
+    public Price findPrice(LocalDateTime applicationDate, Long productId, Long brandId) {
         return priceRepository.findPrice(applicationDate, productId, brandId);
     }
 }

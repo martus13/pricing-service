@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record Price(
-        Integer brandId,
+        Long brandId,
         LocalDateTime startDate,
         LocalDateTime endDate,
-        Integer priceList,
-        Integer productId,
-        Integer priority,
+        Long priceList,
+        Long productId,
+        Long priority,
         BigDecimal price,
         String currency) {
 

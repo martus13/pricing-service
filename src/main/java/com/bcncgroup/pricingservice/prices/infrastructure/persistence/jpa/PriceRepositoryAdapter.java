@@ -18,32 +18,32 @@ import java.util.List;
 @AllArgsConstructor
 public class PriceRepositoryAdapter implements PriceRepository {
 
-        @PersistenceContext
-        private final EntityManager entityManager;
+    @PersistenceContext
+    private final EntityManager entityManager;
 
-        private final EntityToPriceMapper entityToPriceMapper;
+    private final EntityToPriceMapper entityToPriceMapper;
 
-        @Override
-        @Transactional(readOnly = true)
-        public Price findPrice(LocalDateTime applicationDate, Integer productId, Integer brandId) {
-                List<PriceEntity> prices = entityManager
-                        .createQuery(
-                                "select p from PriceEntity p " +
+    @Override
+    @Transactional(readOnly = true)
+    public Price findPrice(LocalDateTime applicationDate, Long productId, Long brandId) {
+        List<PriceEntity> prices = entityManager
+                .createQuery(
+                        "select p from PriceEntity p " +
                                 "where :applicationDate between p.startDate and p.endDate " +
                                 "and p.productId = :productId " +
                                 "and p.brandId = :brandId " +
                                 "order by p.priority DESC",
-                                PriceEntity.class)
-                        .setParameter("applicationDate", applicationDate)
-                        .setParameter("productId", productId)
-                        .setParameter("brandId", brandId)
-                        .setMaxResults(1)
-                        .getResultList();
+                        PriceEntity.class)
+                .setParameter("applicationDate", applicationDate)
+                .setParameter("productId", productId)
+                .setParameter("brandId", brandId)
+                .setMaxResults(1)
+                .getResultList();
 
-                return prices.stream()
-                        .findFirst()
-                        .map(entityToPriceMapper::toPrice)
-                        .orElseThrow(() -> new PriceNotFoundException("Price not found"));
-        }
+        return prices.stream()
+                .findFirst()
+                .map(entityToPriceMapper::toPrice)
+                .orElseThrow(() -> new PriceNotFoundException("Price not found"));
+    }
 
 }
