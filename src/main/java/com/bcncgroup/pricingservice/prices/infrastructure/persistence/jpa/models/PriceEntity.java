@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import jakarta.persistence.Convert;
+import com.bcncgroup.pricingservice.prices.infrastructure.persistence.jpa.converters.LocalDateTimeCustomConverter;
 
 @Entity
 @Table(name = "PRICES")
@@ -27,9 +29,11 @@ public class PriceEntity {
     private Long brandId;
 
     @Column(name = "START_DATE", nullable = false)
+    @Convert(converter = LocalDateTimeCustomConverter.class)
     private LocalDateTime startDate;
 
     @Column(name = "END_DATE", nullable = false)
+    @Convert(converter = LocalDateTimeCustomConverter.class)
     private LocalDateTime endDate;
 
     @Column(name = "PRICE_LIST", nullable = false)
