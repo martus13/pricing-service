@@ -1,4 +1,4 @@
-package com.bcncgroup.pricingservice.prices.infrastructure.persistence.h2.models;
+package com.bcncgroup.pricingservice.prices.infrastructure.persistence.jpa.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
