@@ -41,19 +41,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/ProblemDetails"
         "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/ProblemDetails"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
         "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/ProblemDetails"
 components:
   schemas:
     Price:
@@ -85,22 +91,15 @@ components:
           type: string
           example: EUR
 
-    ErrorResponse:
+    ProblemDetails:
       type: object
       properties:
-        timestamp:
-          type: string
-          format: date-time
-          example: "2025-08-30T12:34:56Z"
         status:
           type: integer
           example: 404
-        error:
+        title:
           type: string
           example: Not Found
-        message:
+        detail:
           type: string
-          example: No se encontró un precio aplicable
-        path:
-          type: string
-          example: /prices
+          example: No applicable price was found.

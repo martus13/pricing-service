@@ -1,4 +1,4 @@
-package com.bcncgroup.pricingservice.prices.infrastructure.api.dto;
+package com.bcncgroup.pricingservice.prices.infrastructure.api.rest.models;
 
 import lombok.Builder;
 import lombok.Data;

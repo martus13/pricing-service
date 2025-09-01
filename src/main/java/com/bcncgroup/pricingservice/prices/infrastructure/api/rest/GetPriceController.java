@@ -1,8 +1,8 @@
-package com.bcncgroup.pricingservice.prices.infrastructure.api;
+package com.bcncgroup.pricingservice.prices.infrastructure.api.rest;
 
 import com.bcncgroup.pricingservice.prices.application.PriceService;
-import com.bcncgroup.pricingservice.prices.infrastructure.api.dto.PriceResponse;
-import com.bcncgroup.pricingservice.prices.infrastructure.api.mapper.PriceToResponseMapper;
+import com.bcncgroup.pricingservice.prices.infrastructure.api.rest.models.PriceResponse;
+import com.bcncgroup.pricingservice.prices.infrastructure.api.rest.mappers.PriceToResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
