@@ -33,7 +33,7 @@ class GetPriceControllerTest {
 
     @Test
     @DisplayName("Test 1 - 2020-06-14T10:00: priceList=1 price=35.50")
-    void given_2020_06_14T10_when_getPrice_then_return_priceList_1() throws Exception {
+    void given_applicationDate_within_priceList1_when_getPrices_then_return_priceList1() throws Exception {
         // Arrange
         String applicationDate = "2020-06-14T10:00:00";
 
@@ -51,7 +51,7 @@ class GetPriceControllerTest {
 
     @Test
     @DisplayName("Test 2 - 2020-06-14T16:00: priceList=2 price=25.45")
-    void given_2020_06_14T16_when_getPrice_then_return_priceList_2() throws Exception {
+    void given_applicationDate_within_priceList2_when_getPrices_then_return_priceList2() throws Exception {
         // Arrange
         String applicationDate = "2020-06-14T16:00:00";
 
@@ -69,7 +69,7 @@ class GetPriceControllerTest {
 
     @Test
     @DisplayName("Test 3 - 2020-06-14T21:00: priceList=1 price=35.50")
-    void given_2020_06_14T21_when_getPrice_then_return_priceList_1_again() throws Exception {
+    void given_applicationDate_within_priceList1_at_night_when_getPrices_then_return_priceList1() throws Exception {
         // Arrange
         String applicationDate = "2020-06-14T21:00:00";
 
@@ -87,7 +87,7 @@ class GetPriceControllerTest {
 
     @Test
     @DisplayName("Test 4 - 2020-06-15T10:00: priceList=3 price=30.50")
-    void given_2020_06_15T10_when_getPrice_then_return_priceList_3() throws Exception {
+    void given_applicationDate_within_priceList3_when_getPrices_then_return_priceList3() throws Exception {
         // Arrange
         String applicationDate = "2020-06-15T10:00:00";
 
@@ -105,7 +105,7 @@ class GetPriceControllerTest {
 
     @Test
     @DisplayName("Test 5 - 2020-06-16T21:00: priceList=4 price=38.95")
-    void given_2020_06_16T21_when_getPrice_then_return_priceList_4() throws Exception {
+    void given_applicationDate_within_priceList4_when_getPrices_then_return_priceList4() throws Exception {
         // Arrange
         String applicationDate = "2020-06-16T21:00:00";
 
@@ -119,5 +119,25 @@ class GetPriceControllerTest {
                 .andExpect(jsonPath("$.priceList", is(4)))
                 .andExpect(jsonPath("$.price", is(38.95)))
                 .andExpect(jsonPath("$.currency", is(CURRENCY)));
+    }
+
+    @Test
+    @DisplayName("When no price found returns ProblemDetail 404")
+    void given_noPrice_when_getPrices_then_return_ProblemDetail_404() throws Exception {
+        // Arrange
+        String applicationDate = "2020-01-01T00:00:00";
+        String nonExistingProductId = "999999";
+
+        // Act
+        ResultActions result = mockMvc.perform(get("/prices")
+                .param("applicationDate", applicationDate)
+                .param("productId", nonExistingProductId)
+                .param("brandId", String.valueOf(BRAND_ID)));
+
+        // Assert
+        result.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status", is("404")))
+                .andExpect(jsonPath("$.title", is("Price Not Found")))
+                .andExpect(jsonPath("$.detail", is("Price not found")));
     }
 }

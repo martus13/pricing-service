@@ -27,7 +27,7 @@ class PriceServiceTest {
     private PriceService priceService;
 
     @Test
-    void findPrice_delegatesToRepository_and_returnsPrice() {
+    void findPrice_withRepositoryResult_returnsPrice() {
         LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0);
         Price expected = new Price(1L, date.minusDays(1), date.plusDays(1), 1L, 35455L, 0L, new BigDecimal("35.50"),
                 "EUR");
@@ -41,7 +41,7 @@ class PriceServiceTest {
     }
 
     @Test
-    void findPrice_whenRepositoryThrows_propagates() {
+    void findPrice_whenRepositoryThrows_throwsPriceNotFoundException() {
         LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0);
 
         when(priceRepository.findPrice(date, 35455L, 1L)).thenThrow(new PriceNotFoundException("not found"));

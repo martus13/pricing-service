@@ -19,7 +19,10 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,7 +56,7 @@ class PriceRepositoryAdapterTest {
     }
 
     @Test
-    void findPrice_returnsMappedPrice_ifQueryReturnsResult() {
+    void findPrice_withMatch_returnsMappedPrice() {
         LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0);
 
         when(entityManager.createQuery(anyString(), eq(PriceEntity.class))).thenReturn(typedQuery);
@@ -72,7 +75,7 @@ class PriceRepositoryAdapterTest {
     }
 
     @Test
-    void findPrice_throwsPriceNotFoundException_ifNoResult() {
+    void findPrice_withNoResult_throwsPriceNotFoundException() {
         LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0);
 
         when(entityManager.createQuery(anyString(), eq(PriceEntity.class))).thenReturn(typedQuery);
