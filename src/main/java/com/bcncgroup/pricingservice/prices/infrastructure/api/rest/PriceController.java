@@ -1,6 +1,6 @@
 package com.bcncgroup.pricingservice.prices.infrastructure.api.rest;
 
-import com.bcncgroup.pricingservice.prices.application.PriceService;
+import com.bcncgroup.pricingservice.prices.application.FindPriceUseCase;
 import com.bcncgroup.pricingservice.prices.infrastructure.api.rest.models.PriceResponse;
 import com.bcncgroup.pricingservice.prices.infrastructure.api.rest.mappers.PriceToResponseMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +19,9 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping("/prices")
 @RequiredArgsConstructor
-public class GetPriceController {
+public class PriceController {
 
-    private final PriceService priceService;
+    private final FindPriceUseCase findPriceUseCase;
     private final PriceToResponseMapper priceToResponseMapper;
 
     @GetMapping
@@ -32,6 +32,6 @@ public class GetPriceController {
 
         log.debugv("GET /prices?productId={0}&&brandId={1}&&applicationDate={2}", productId, brandId, applicationDate);
         return ResponseEntity
-                .ok(priceToResponseMapper.toResponse(priceService.findPrice(applicationDate, productId, brandId)));
+                .ok(priceToResponseMapper.toResponse(findPriceUseCase.execute(applicationDate, productId, brandId)));
     }
 }

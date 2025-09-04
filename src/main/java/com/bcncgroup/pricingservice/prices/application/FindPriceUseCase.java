@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class PriceService {
+public class FindPriceUseCase {
 
     private final PriceRepository priceRepository;
 
-    public Price findPrice(LocalDateTime applicationDate, Long productId, Long brandId) {
+    public Price execute(LocalDateTime applicationDate, Long productId, Long brandId) {
         return priceRepository.findPrice(applicationDate, productId, brandId);
     }
 }
