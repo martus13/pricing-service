@@ -28,7 +28,7 @@ class FindPriceUseCaseTest {
     private FindPriceUseCase findPriceUseCase;
 
     @Test
-    void execute_shouldReturnPrice_whenRepositoryReturnsResult() {
+    void findPrice_shouldReturnPrice_whenRepositoryReturnsResult() {
         // Arrange
         var applicationDate = LocalDateTime.of(2020, 6, 14, 10, 0);
         var productId = 35455L;
@@ -47,7 +47,7 @@ class FindPriceUseCaseTest {
                 .thenReturn(Optional.of(expectedPrice));
 
         // Act
-        var actualPrice = findPriceUseCase.execute(applicationDate, productId, brandId);
+        var actualPrice = findPriceUseCase.findPrice(applicationDate, productId, brandId);
 
         // Assert
         assertEquals(expectedPrice, actualPrice, "The returned price should match the expected one");
@@ -55,7 +55,7 @@ class FindPriceUseCaseTest {
     }
 
     @Test
-    void execute_shouldThrowPriceNotFoundException_whenRepositoryThrows() {
+    void findPrice_shouldThrowPriceNotFoundException_whenRepositoryThrows() {
         // Arrange
         var applicationDate = LocalDateTime.of(2020, 6, 14, 10, 0);
         var productId = 35455L;
@@ -65,7 +65,7 @@ class FindPriceUseCaseTest {
 
         // Act & Assert
         assertThrows(PriceNotFoundException.class,
-                () -> findPriceUseCase.execute(applicationDate, productId, brandId),
+                () -> findPriceUseCase.findPrice(applicationDate, productId, brandId),
                 "Should throw PriceNotFoundException when price is not found");
 
         verify(priceRepository).findPrice(applicationDate, productId, brandId);

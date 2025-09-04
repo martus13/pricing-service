@@ -32,6 +32,6 @@ public class PriceController {
 
         log.debugv("GET /prices?productId={0}&&brandId={1}&&applicationDate={2}", productId, brandId, applicationDate);
         return ResponseEntity
-                .ok(priceToResponseMapper.toResponse(findPriceUseCase.execute(applicationDate, productId, brandId)));
+                .ok(priceToResponseMapper.toResponse(findPriceUseCase.findPrice(applicationDate, productId, brandId)));
     }
 }

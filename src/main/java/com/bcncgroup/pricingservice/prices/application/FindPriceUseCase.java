@@ -14,7 +14,7 @@ public class FindPriceUseCase {
 
     private final PriceRepository priceRepository;
 
-    public Price execute(LocalDateTime applicationDate, Long productId, Long brandId) {
+    public Price findPrice(LocalDateTime applicationDate, Long productId, Long brandId) {
         return priceRepository.findPrice(applicationDate, productId, brandId)
                 .orElseThrow(() -> new PriceNotFoundException("Price not found"));
     }
