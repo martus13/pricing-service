@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class PriceResponse {
     private Long brandId;
     private LocalDateTime startDate;
