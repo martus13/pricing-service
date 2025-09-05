@@ -17,6 +17,8 @@ public class PriceService implements FindPriceUseCase {
 
     public Price findPrice(Instant applicationDate, Long productId, Long brandId) {
         return loadPricePort.loadApplicablePrice(applicationDate, productId, brandId)
-                .orElseThrow(() -> new PriceNotFoundException("Price not found"));
+                .orElseThrow(() -> new PriceNotFoundException(
+                        String.format("Price not found for applicationDate=%s, productId=%s, brandId=%s",
+                                applicationDate, productId, brandId)));
     }
 }

@@ -119,6 +119,24 @@ class PriceControllerTest {
         result.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status", is("404")))
                 .andExpect(jsonPath("$.title", is("Price Not Found")))
-                .andExpect(jsonPath("$.detail", is("Price not found")));
+                .andExpect(jsonPath("$.detail",
+                        is(String.format("Price not found for applicationDate=%s, productId=%s, brandId=%s",
+                                applicationDate,
+                                nonExistingProductId,
+                                BRAND_ID))));
+    }
+
+    @Test
+    void getPrice_shouldReturn400BadRequest_whenApplicationDateIsMalformed() throws Exception {
+        // Arrange
+        var malformedDate = "not-a-date";
+
+        // Act
+        var result = performGet(malformedDate, PRODUCT_ID);
+
+        // Assert
+        result.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is("400")))
+                .andExpect(jsonPath("$.title", is("Bad request")));
     }
 }
