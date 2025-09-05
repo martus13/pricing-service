@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -42,7 +43,7 @@ class PriceRepositoryAdapterTest {
                 LocalDateTime.of(2020, 12, 31, 23, 59, 59),
                 1L,
                 35455L,
-                0L,
+                0,
                 new BigDecimal("35.50"),
                 "EUR");
 
@@ -60,20 +61,21 @@ class PriceRepositoryAdapterTest {
     @Test
     void findPrice_shouldReturnMappedPrice_whenEntityExists() {
         // Arrange
+        var limit1 = PageRequest.of(0, 1);
         var applicationDate = LocalDateTime.of(2020, 6, 14, 10, 0);
-        when(jpaPriceRepository.findApplicablePrice(applicationDate, priceEntity.getProductId(), priceEntity
-                .getBrandId())).thenReturn(List.of(priceEntity));
+        when(jpaPriceRepository.findApplicablePrices(applicationDate, priceEntity.getProductId(), priceEntity
+                .getBrandId(), limit1)).thenReturn(List.of(priceEntity));
         when(mapper.toPrice(priceEntity)).thenReturn(expectedPrice);
 
         // Act
-        var result = adapter.findPrice(applicationDate, priceEntity.getProductId(), priceEntity.getBrandId());
+        var result = adapter.loadApplicablePrice(applicationDate, priceEntity.getProductId(), priceEntity.getBrandId());
 
         // Assert
         assertThat(result).isPresent()
                 .contains(expectedPrice);
 
-        verify(jpaPriceRepository).findApplicablePrice(applicationDate, priceEntity.getProductId(),
-                priceEntity.getBrandId());
+        verify(jpaPriceRepository).findApplicablePrices(applicationDate, priceEntity.getProductId(),
+                priceEntity.getBrandId(), limit1);
         verify(mapper).toPrice(priceEntity);
     }
 }

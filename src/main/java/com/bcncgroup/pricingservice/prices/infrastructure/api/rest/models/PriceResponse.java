@@ -14,7 +14,6 @@ public class PriceResponse {
     private LocalDateTime endDate;
     private Long priceList;
     private Long productId;
-    private Long priority;
     private BigDecimal price;
     private String currency;
 }

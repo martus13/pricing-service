@@ -1,7 +1,7 @@
 package com.bcncgroup.pricingservice.prices.application;
 
+import com.bcncgroup.pricingservice.prices.application.port.out.LoadPricePort;
 import com.bcncgroup.pricingservice.prices.domain.Price;
-import com.bcncgroup.pricingservice.prices.domain.PriceRepository;
 import com.bcncgroup.pricingservice.shared.domain.exceptions.PriceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,13 +19,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class FindPriceUseCaseTest {
+class PriceServiceTest {
 
     @Mock
-    private PriceRepository priceRepository;
+    private LoadPricePort loadPricePort;
 
     @InjectMocks
-    private FindPriceUseCase findPriceUseCase;
+    private PriceService priceService;
 
     @Test
     void findPrice_shouldReturnPrice_whenRepositoryReturnsResult() {
@@ -39,19 +39,19 @@ class FindPriceUseCaseTest {
                 applicationDate.plusDays(1),
                 brandId,
                 productId,
-                0L,
+                0,
                 new BigDecimal("35.50"),
                 "EUR");
 
-        when(priceRepository.findPrice(applicationDate, productId, brandId))
+        when(loadPricePort.loadApplicablePrice(applicationDate, productId, brandId))
                 .thenReturn(Optional.of(expectedPrice));
 
         // Act
-        var actualPrice = findPriceUseCase.findPrice(applicationDate, productId, brandId);
+        var actualPrice = priceService.findPrice(applicationDate, productId, brandId);
 
         // Assert
         assertEquals(expectedPrice, actualPrice, "The returned price should match the expected one");
-        verify(priceRepository).findPrice(applicationDate, productId, brandId);
+        verify(loadPricePort).loadApplicablePrice(applicationDate, productId, brandId);
     }
 
     @Test
@@ -61,13 +61,13 @@ class FindPriceUseCaseTest {
         var productId = 35455L;
         var brandId = 1L;
 
-        when(priceRepository.findPrice(applicationDate, productId, brandId)).thenReturn(Optional.empty());
+        when(loadPricePort.loadApplicablePrice(applicationDate, productId, brandId)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(PriceNotFoundException.class,
-                () -> findPriceUseCase.findPrice(applicationDate, productId, brandId),
+                () -> priceService.findPrice(applicationDate, productId, brandId),
                 "Should throw PriceNotFoundException when price is not found");
 
-        verify(priceRepository).findPrice(applicationDate, productId, brandId);
+        verify(loadPricePort).loadApplicablePrice(applicationDate, productId, brandId);
     }
 }

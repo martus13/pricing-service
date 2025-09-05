@@ -41,7 +41,7 @@ public class PriceEntity {
     private Long productId;
 
     @Column(name = "PRIORITY", nullable = false)
-    private Long priority;
+    private Integer priority;
 
     @Column(name = "PRICE", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;

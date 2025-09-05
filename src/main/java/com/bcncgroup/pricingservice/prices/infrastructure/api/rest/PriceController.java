@@ -1,11 +1,10 @@
 package com.bcncgroup.pricingservice.prices.infrastructure.api.rest;
 
-import com.bcncgroup.pricingservice.prices.application.FindPriceUseCase;
-import com.bcncgroup.pricingservice.prices.infrastructure.api.rest.models.PriceResponse;
+import com.bcncgroup.pricingservice.prices.application.port.in.FindPriceUseCase;
 import com.bcncgroup.pricingservice.prices.infrastructure.api.rest.mappers.PriceToResponseMapper;
+import com.bcncgroup.pricingservice.prices.infrastructure.api.rest.models.PriceResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.jbosslog.JBossLog;
-
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

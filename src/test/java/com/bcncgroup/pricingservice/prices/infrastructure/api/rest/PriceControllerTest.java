@@ -23,11 +23,11 @@ class PriceControllerTest {
     private static final Long BRAND_ID = 1L; // ZARA
     private static final String CURRENCY = "EUR";
 
-    private ResultActions performGet(String applicationDate, Long productId, Long brandId) throws Exception {
+    private ResultActions performGet(String applicationDate, Long productId) throws Exception {
         return mockMvc.perform(get("/prices")
                 .param("applicationDate", applicationDate)
                 .param("productId", String.valueOf(productId))
-                .param("brandId", String.valueOf(brandId)));
+                .param("brandId", String.valueOf(PriceControllerTest.BRAND_ID)));
     }
 
     @Test
@@ -36,7 +36,7 @@ class PriceControllerTest {
         var applicationDate = "2020-06-14T10:00:00";
 
         // Act
-        var result = performGet(applicationDate, PRODUCT_ID, BRAND_ID);
+        var result = performGet(applicationDate, PRODUCT_ID);
 
         // Assert
         result.andExpect(status().isOk())
@@ -53,7 +53,7 @@ class PriceControllerTest {
         var applicationDate = "2020-06-14T16:00:00";
 
         // Act
-        var result = performGet(applicationDate, PRODUCT_ID, BRAND_ID);
+        var result = performGet(applicationDate, PRODUCT_ID);
 
         // Assert
         result.andExpect(status().isOk())
@@ -70,7 +70,7 @@ class PriceControllerTest {
         var applicationDate = "2020-06-14T21:00:00";
 
         // Act
-        var result = performGet(applicationDate, PRODUCT_ID, BRAND_ID);
+        var result = performGet(applicationDate, PRODUCT_ID);
 
         // Assert
         result.andExpect(status().isOk())
@@ -84,7 +84,7 @@ class PriceControllerTest {
         var applicationDate = "2020-06-15T10:00:00";
 
         // Act
-        var result = performGet(applicationDate, PRODUCT_ID, BRAND_ID);
+        var result = performGet(applicationDate, PRODUCT_ID);
 
         // Assert
         result.andExpect(status().isOk())
@@ -98,7 +98,7 @@ class PriceControllerTest {
         var applicationDate = "2020-06-16T21:00:00";
 
         // Act
-        var result = performGet(applicationDate, PRODUCT_ID, BRAND_ID);
+        var result = performGet(applicationDate, PRODUCT_ID);
 
         // Assert
         result.andExpect(status().isOk())
@@ -113,7 +113,7 @@ class PriceControllerTest {
         var nonExistingProductId = 999999L;
 
         // Act
-        var result = performGet(applicationDate, nonExistingProductId, BRAND_ID);
+        var result = performGet(applicationDate, nonExistingProductId);
 
         // Assert
         result.andExpect(status().isNotFound())
