@@ -1,23 +1,25 @@
 package com.bcncgroup.pricingservice.prices.infrastructure.persistence.jpa.models;
 
+import com.bcncgroup.pricingservice.prices.infrastructure.persistence.jpa.converters.InstantTimeCustomConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import jakarta.persistence.Convert;
-import com.bcncgroup.pricingservice.prices.infrastructure.persistence.jpa.converters.LocalDateTimeCustomConverter;
+import java.time.Instant;
 
 @Entity
 @Table(name = "PRICES")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class PriceEntity {
 
     @Id
@@ -29,12 +31,12 @@ public class PriceEntity {
     private Long brandId;
 
     @Column(name = "START_DATE", nullable = false)
-    @Convert(converter = LocalDateTimeCustomConverter.class)
-    private LocalDateTime startDate;
+    @Convert(converter = InstantTimeCustomConverter.class)
+    private Instant startDate;
 
     @Column(name = "END_DATE", nullable = false)
-    @Convert(converter = LocalDateTimeCustomConverter.class)
-    private LocalDateTime endDate;
+    @Convert(converter = InstantTimeCustomConverter.class)
+    private Instant endDate;
 
     @Column(name = "PRICE_LIST", nullable = false)
     private Long priceList;
@@ -43,7 +45,7 @@ public class PriceEntity {
     private Long productId;
 
     @Column(name = "PRIORITY", nullable = false)
-    private Long priority;
+    private Integer priority;
 
     @Column(name = "PRICE", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;

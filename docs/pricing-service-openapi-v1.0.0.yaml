@@ -1,41 +1,41 @@
 openapi: 3.0.3
 info:
   title: Pricing Service API
-  description: API de comercio electrónico paraque gestiona las tarifas aplicables a un producto de una cadena.
+  description: REST API to manage pricing information for products.
   version: 1.0.0
 servers:
   - url: http://localhost:8080
 paths:
   /prices:
     get:
-      summary: Consulta el precio aplicable a un producto de una cadena en una fecha dada.
+      summary: Get the applicable price for a product from a brand on a given date.
       parameters:
         - in: query
           name: applicationDate
           required: true
+          description: The date and time for which the price is being queried.
           schema:
             type: string
             format: date-time
-          description: Fecha de aplicación (ISO 8601).
         - in: query
           name: productId
           required: true
+          description: The ID of the product for which the price is being queried.
           schema:
             type: integer
-          description: Identificador del producto.
         - in: query
           name: brandId
           required: true
+          description: The ID of the brand for which the price is being queried.
           schema:
             type: integer
-          description: Identificador de la cadena (brand).
       responses:
         "200":
-          description: Precio encontrado
+          description: Price found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Price"
+                $ref: "#/components/schemas/PriceResponse"
         "400":
           description: Bad Request
           content:
@@ -48,12 +48,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
-        "409":
-          description: Conflict
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetails"
         "500":
           description: Internal Server Error
           content:
@@ -62,33 +56,39 @@ paths:
                 $ref: "#/components/schemas/ProblemDetails"
 components:
   schemas:
-    Price:
+    PriceResponse:
       type: object
       properties:
         productId:
           type: integer
+          description: The ID of the product for which the price is being queried.
           example: 35455
         brandId:
           type: integer
+          description: The ID of the brand for which the price is being queried.
           example: 1
         priceList:
           type: integer
-          description: Identificador de la tarifa de precios aplicable
+          description: The ID of the price list to which the price belongs.
           example: 2
         startDate:
           type: string
           format: date-time
+          description: The start date and time from which the price is valid.
           example: "2020-06-14T15:00:00Z"
         endDate:
           type: string
           format: date-time
+          description: The end date and time until which the price is valid.
           example: "2020-06-14T18:30:00Z"
         price:
           type: number
           format: float
+          description: The price of the product for the specified brand and date.
           example: 25.45
         currency:
           type: string
+          description: The currency in which the price is specified.
           example: EUR
 
     ProblemDetails:
@@ -96,10 +96,13 @@ components:
       properties:
         status:
           type: integer
+          description: The HTTP status code.
           example: 404
         title:
           type: string
+          description: A short, human-readable summary of the problem.
           example: Not Found
         detail:
           type: string
+          description: A detailed explanation of the problem.
           example: No applicable price was found.

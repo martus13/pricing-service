@@ -1,49 +1,31 @@
 package com.bcncgroup.pricingservice.prices.infrastructure.persistence.jpa;
 
+import com.bcncgroup.pricingservice.prices.application.port.out.LoadPricePort;
 import com.bcncgroup.pricingservice.prices.domain.Price;
-import com.bcncgroup.pricingservice.prices.domain.PriceRepository;
 import com.bcncgroup.pricingservice.prices.infrastructure.persistence.jpa.mappers.EntityToPriceMapper;
-import com.bcncgroup.pricingservice.prices.infrastructure.persistence.jpa.models.PriceEntity;
-import com.bcncgroup.pricingservice.shared.domain.exceptions.PriceNotFoundException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.time.Instant;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
-public class PriceRepositoryAdapter implements PriceRepository {
-
-    @PersistenceContext
-    private final EntityManager entityManager;
+public class PriceRepositoryAdapter implements LoadPricePort {
 
     private final EntityToPriceMapper entityToPriceMapper;
+    private final JpaPriceRepository jpaPriceRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public Price findPrice(LocalDateTime applicationDate, Long productId, Long brandId) {
-        List<PriceEntity> prices = entityManager
-                .createQuery(
-                        "select p from PriceEntity p " +
-                                "where :applicationDate between p.startDate and p.endDate " +
-                                "and p.productId = :productId " +
-                                "and p.brandId = :brandId " +
-                                "order by p.priority DESC",
-                        PriceEntity.class)
-                .setParameter("applicationDate", applicationDate)
-                .setParameter("productId", productId)
-                .setParameter("brandId", brandId)
-                .setMaxResults(1)
-                .getResultList();
-
-        return prices.stream()
+    public Optional<Price> loadApplicablePrice(Instant applicationDate, Long productId, Long brandId) {
+        Pageable p = PageRequest.of(0, 1);
+        return jpaPriceRepository.findApplicablePrices(applicationDate, productId, brandId, p).stream()
                 .findFirst()
-                .map(entityToPriceMapper::toPrice)
-                .orElseThrow(() -> new PriceNotFoundException("Price not found"));
+                .map(entityToPriceMapper::toPrice);
     }
 
 }
