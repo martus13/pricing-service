@@ -33,8 +33,8 @@ public class PriceExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ProblemDetails(
                         String.valueOf(HttpStatus.BAD_REQUEST.value()),
-                        "Petición no válida",
-                        "La petición enviada no tiene el formato adecuado"));
+                        "Bad Request",
+                        "The request has an invalid format"));
     }
 
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
@@ -44,8 +44,8 @@ public class PriceExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ProblemDetails(
                         String.valueOf(HttpStatus.BAD_REQUEST.value()),
-                        "Petición no válida",
-                        "Faltan parámetros en la petición"));
+                        "Bad Request",
+                        "Missing required request parameters"));
     }
 
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
