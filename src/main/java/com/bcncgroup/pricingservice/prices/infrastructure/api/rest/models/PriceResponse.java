@@ -1,19 +1,14 @@
 package com.bcncgroup.pricingservice.prices.infrastructure.api.rest.models;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
-@Data
-@Builder(toBuilder = true)
-public class PriceResponse {
-    private Long brandId;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-    private Long priceList;
-    private Long productId;
-    private BigDecimal price;
-    private String currency;
+public record PriceResponse(
+        Long brandId,
+        Instant startDate,
+        Instant endDate,
+        Long priceList,
+        Long productId,
+        BigDecimal price,
+        String currency) {
 }

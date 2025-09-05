@@ -10,7 +10,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,13 +31,13 @@ class PriceServiceTest {
     @Test
     void findPrice_shouldReturnPrice_whenRepositoryReturnsResult() {
         // Arrange
-        var applicationDate = LocalDateTime.of(2020, 6, 14, 10, 0);
+        var applicationDate = Instant.parse("2020-06-14T10:00:00Z");
         var productId = 35455L;
         var brandId = 1L;
         var expectedPrice = new Price(
                 1L,
-                applicationDate.minusDays(1),
-                applicationDate.plusDays(1),
+                applicationDate.minus(1, ChronoUnit.DAYS),
+                applicationDate.plus(1, ChronoUnit.DAYS),
                 brandId,
                 productId,
                 0,
@@ -57,7 +58,7 @@ class PriceServiceTest {
     @Test
     void findPrice_shouldThrowPriceNotFoundException_whenRepositoryThrows() {
         // Arrange
-        var applicationDate = LocalDateTime.of(2020, 6, 14, 10, 0);
+        var applicationDate = Instant.parse("2020-06-14T10:00:00Z");
         var productId = 35455L;
         var brandId = 1L;
 

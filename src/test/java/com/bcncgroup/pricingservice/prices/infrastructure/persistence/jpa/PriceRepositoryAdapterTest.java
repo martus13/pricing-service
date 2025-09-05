@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,8 +39,8 @@ class PriceRepositoryAdapterTest {
         priceEntity = new PriceEntity(
                 1L,
                 1L,
-                LocalDateTime.of(2020, 6, 14, 0, 0),
-                LocalDateTime.of(2020, 12, 31, 23, 59, 59),
+                Instant.parse("2020-06-14T10:00:00Z"),
+                Instant.parse("2020-12-31T23:59:59Z"),
                 1L,
                 35455L,
                 0,
@@ -62,7 +62,7 @@ class PriceRepositoryAdapterTest {
     void findPrice_shouldReturnMappedPrice_whenEntityExists() {
         // Arrange
         var limit1 = PageRequest.of(0, 1);
-        var applicationDate = LocalDateTime.of(2020, 6, 14, 10, 0);
+        var applicationDate = Instant.parse("2020-06-14T10:00:00Z");
         when(jpaPriceRepository.findApplicablePrices(applicationDate, priceEntity.getProductId(), priceEntity
                 .getBrandId(), limit1)).thenReturn(List.of(priceEntity));
         when(mapper.toPrice(priceEntity)).thenReturn(expectedPrice);

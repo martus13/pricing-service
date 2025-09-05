@@ -7,7 +7,7 @@ import com.bcncgroup.pricingservice.shared.domain.exceptions.PriceNotFoundExcept
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -15,8 +15,8 @@ public class PriceService implements FindPriceUseCase {
 
     private final LoadPricePort loadPricePort;
 
-    public Price findPrice(LocalDateTime applicationDate, Long productId, Long brandId) {
+    public Price findPrice(Instant applicationDate, Long productId, Long brandId) {
         return loadPricePort.loadApplicablePrice(applicationDate, productId, brandId)
-                        .orElseThrow(() -> new PriceNotFoundException("Price not found"));
+                .orElseThrow(() -> new PriceNotFoundException("Price not found"));
     }
 }

@@ -1,5 +1,6 @@
 package com.bcncgroup.pricingservice.shared.infrastructure.api.rest;
 
+import com.bcncgroup.pricingservice.shared.domain.exceptions.PriceBadRequestException;
 import com.bcncgroup.pricingservice.shared.domain.exceptions.PriceNotFoundException;
 import com.bcncgroup.pricingservice.shared.infrastructure.api.rest.models.ProblemDetails;
 import lombok.extern.jbosslog.JBossLog;
@@ -23,6 +24,17 @@ public class PriceExceptionHandler {
                 .body(new ProblemDetails(
                         String.valueOf(HttpStatus.NOT_FOUND.value()),
                         "Price Not Found",
+                        e.getMessage()));
+    }
+
+    @ExceptionHandler(value = PriceBadRequestException.class)
+    public ResponseEntity<ProblemDetails> handle(PriceBadRequestException e) {
+        log.debug("Bad request", e);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ProblemDetails(
+                        String.valueOf(HttpStatus.BAD_REQUEST.value()),
+                        "Bad request",
                         e.getMessage()));
     }
 
@@ -57,6 +69,17 @@ public class PriceExceptionHandler {
                         String.valueOf(HttpStatus.METHOD_NOT_ALLOWED.value()),
                         "Method Not Allowed",
                         String.format("Request method '%s' not supported", e.getMethod())));
+    }
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<ProblemDetails> handle(IllegalArgumentException e) {
+        log.debug(e.getMessage(), e);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ProblemDetails(
+                        String.valueOf(HttpStatus.BAD_REQUEST.value()),
+                        "Bad Request",
+                        "Invalid request parameters"));
     }
 
     @ExceptionHandler(value = Exception.class)

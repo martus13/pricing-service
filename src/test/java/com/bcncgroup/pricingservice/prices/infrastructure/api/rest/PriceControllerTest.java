@@ -20,20 +20,20 @@ class PriceControllerTest {
     private MockMvc mockMvc;
 
     private static final Long PRODUCT_ID = 35455L;
-    private static final Long BRAND_ID = 1L; // ZARA
+    private static final Long BRAND_ID = 1L;
     private static final String CURRENCY = "EUR";
 
     private ResultActions performGet(String applicationDate, Long productId) throws Exception {
         return mockMvc.perform(get("/prices")
                 .param("applicationDate", applicationDate)
                 .param("productId", String.valueOf(productId))
-                .param("brandId", String.valueOf(PriceControllerTest.BRAND_ID)));
+                .param("brandId", String.valueOf(BRAND_ID)));
     }
 
     @Test
     void getPrice_shouldReturnPrice35_50_whenApplicationDateIs2020_06_14T10_00() throws Exception {
         // Arrange
-        var applicationDate = "2020-06-14T10:00:00";
+        var applicationDate = "2020-06-14T10:00:00Z";
 
         // Act
         var result = performGet(applicationDate, PRODUCT_ID);
@@ -50,7 +50,7 @@ class PriceControllerTest {
     @Test
     void getPrice_shouldReturnPrice25_45_whenApplicationDateIs2020_06_14T16_00() throws Exception {
         // Arrange
-        var applicationDate = "2020-06-14T16:00:00";
+        var applicationDate = "2020-06-14T16:00:00Z";
 
         // Act
         var result = performGet(applicationDate, PRODUCT_ID);
@@ -67,7 +67,7 @@ class PriceControllerTest {
     @Test
     void getPrice_shouldReturnPrice35_50_whenApplicationDateIs2020_06_14T21_00() throws Exception {
         // Arrange
-        var applicationDate = "2020-06-14T21:00:00";
+        var applicationDate = "2020-06-14T21:00:00Z";
 
         // Act
         var result = performGet(applicationDate, PRODUCT_ID);
@@ -81,7 +81,7 @@ class PriceControllerTest {
     @Test
     void getPrice_shouldReturnPrice30_50_whenApplicationDateIs2020_06_15T10_00() throws Exception {
         // Arrange
-        var applicationDate = "2020-06-15T10:00:00";
+        var applicationDate = "2020-06-15T10:00:00Z";
 
         // Act
         var result = performGet(applicationDate, PRODUCT_ID);
@@ -95,7 +95,7 @@ class PriceControllerTest {
     @Test
     void getPrice_shouldReturnPrice38_95_whenApplicationDateIs2020_06_16T21_00() throws Exception {
         // Arrange
-        var applicationDate = "2020-06-16T21:00:00";
+        var applicationDate = "2020-06-16T21:00:00Z";
 
         // Act
         var result = performGet(applicationDate, PRODUCT_ID);
@@ -109,7 +109,7 @@ class PriceControllerTest {
     @Test
     void getPrice_shouldReturn404ProblemDetail_whenProductDoesNotExist() throws Exception {
         // Arrange
-        var applicationDate = "2020-01-01T00:00:00";
+        var applicationDate = "2020-01-01T00:00:00Z";
         var nonExistingProductId = 999999L;
 
         // Act

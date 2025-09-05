@@ -3,16 +3,17 @@ package com.bcncgroup.pricingservice.prices.infrastructure.api.rest;
 import com.bcncgroup.pricingservice.prices.application.port.in.FindPriceUseCase;
 import com.bcncgroup.pricingservice.prices.infrastructure.api.rest.mappers.PriceToResponseMapper;
 import com.bcncgroup.pricingservice.prices.infrastructure.api.rest.models.PriceResponse;
+import com.bcncgroup.pricingservice.shared.domain.exceptions.PriceBadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.jbosslog.JBossLog;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 
 @JBossLog
 @RestController
@@ -25,12 +26,23 @@ public class PriceController {
 
     @GetMapping
     public ResponseEntity<PriceResponse> getPrice(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime applicationDate,
+            @RequestParam String applicationDate,
             @RequestParam Long productId,
             @RequestParam Long brandId) {
 
-        log.debugv("GET /prices?productId={0}&&brandId={1}&&applicationDate={2}", productId, brandId, applicationDate);
+        OffsetDateTime applicationDateTime = parseApplicationDate(applicationDate);
+
+        log.debugv("GET /prices?productId={0}&&brandId={1}&&applicationDate={2}", productId, brandId, applicationDateTime.toString());
         return ResponseEntity
-                .ok(priceToResponseMapper.toResponse(findPriceUseCase.findPrice(applicationDate, productId, brandId)));
+                .ok(priceToResponseMapper
+                        .toResponse(findPriceUseCase.findPrice(applicationDateTime.toInstant(), productId, brandId)));
+    }
+
+    private OffsetDateTime parseApplicationDate(String applicationDate){
+        try {
+            return OffsetDateTime.parse(applicationDate);
+        } catch (DateTimeParseException ex) {
+            throw new PriceBadRequestException(String.format("Invalid applicationDate format %s", applicationDate));
+        }
     }
 }

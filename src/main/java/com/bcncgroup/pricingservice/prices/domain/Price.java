@@ -1,16 +1,16 @@
 package com.bcncgroup.pricingservice.prices.domain;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public record Price(
-        Long brandId,
-        LocalDateTime startDate,
-        LocalDateTime endDate,
-        Long priceList,
-        Long productId,
-        Integer priority,
-        BigDecimal price,
-        String currency) {
+                Long brandId,
+                Instant startDate,
+                Instant endDate,
+                Long priceList,
+                Long productId,
+                Integer priority,
+                BigDecimal price,
+                String currency) {
 
 }
