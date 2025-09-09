@@ -24,15 +24,15 @@ public class PriceController {
     private final FindPriceUseCase findPriceUseCase;
     private final PriceToResponseMapper priceToResponseMapper;
 
-    @GetMapping
+    @GetMapping("/products/{productId}/brands/{brandId}")
     public ResponseEntity<PriceResponse> getPrice(
-            @RequestParam String applicationDate,
-            @RequestParam Long productId,
-            @RequestParam Long brandId) {
+            @PathVariable Long productId,
+            @PathVariable Long brandId,
+            @RequestParam String applicationDate) {
 
         OffsetDateTime applicationDateTime = parseApplicationDate(applicationDate);
 
-        log.debugv("GET /prices?productId={0}&&brandId={1}&&applicationDate={2}", productId, brandId, applicationDateTime.toString());
+        log.debugv("GET /prices/products/{0}/brands/{1}?applicationDate={2}", productId, brandId, applicationDateTime.toString());
         return ResponseEntity
                 .ok(priceToResponseMapper
                         .toResponse(findPriceUseCase.findPrice(applicationDateTime.toInstant(), productId, brandId)));

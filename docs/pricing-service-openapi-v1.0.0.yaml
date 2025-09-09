@@ -6,10 +6,22 @@ info:
 servers:
   - url: http://localhost:8080
 paths:
-  /prices:
+  /prices/products/{productId}/brands/{brandId}:
     get:
       summary: Get the applicable price for a product from a brand on a given date.
       parameters:
+        - in: path
+          name: productId
+          required: true
+          description: The ID of the product for which the price is being queried.
+          schema:
+            type: integer
+        - in: path
+          name: brandId
+          required: true
+          description: The ID of the brand for which the price is being queried.
+          schema:
+            type: integer
         - in: query
           name: applicationDate
           required: true
@@ -17,18 +29,6 @@ paths:
           schema:
             type: string
             format: date-time
-        - in: query
-          name: productId
-          required: true
-          description: The ID of the product for which the price is being queried.
-          schema:
-            type: integer
-        - in: query
-          name: brandId
-          required: true
-          description: The ID of the brand for which the price is being queried.
-          schema:
-            type: integer
       responses:
         "200":
           description: Price found
