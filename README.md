@@ -1,160 +1,120 @@
 # Pricing Service
 
-A microservice for price management, built with Java and Spring Boot, following clean architecture and Domain-Driven Design (DDD) principles.
+Example microservice for price management (pricing-service).
 
----
+## Description
 
-## About
+This is a Java Spring Boot microservice exposing price-related operations. It includes persistence, data initialization scripts and an OpenAPI specification located at `docs/pricing-service-openapi-v1.0.0.yaml`.
 
-Pricing Service is a backend microservice designed to manage and expose price-related operations via a RESTful API. It demonstrates best practices in Java backend development, including layered architecture, modularity, and testability.
+## Technologies
 
----
+- Java + Spring Boot
+- Gradle (wrapper included)
+- SQL initialization scripts: `src/main/resources/schema.sql` and `src/main/resources/data.sql`
 
-## Features
+## Assumptions
 
-- Exposes REST endpoints for price queries and management
-- In-memory H2 database with auto-initialization scripts
-- OpenAPI 3.0 specification for contract-first development
-- Modular, testable, and extensible codebase
-- Example of clean architecture and DDD in Java
+- The project uses the Gradle wrapper (`gradlew` / `gradlew.bat`).
+- You are working on Windows using PowerShell — commands below are tailored for that shell.
+- The main application class is `com.bcncgroup.pricingservice.Application` (inferred from the compiled classes).
 
----
+## API contract (brief)
 
-## Technologies Used
+- Input: REST HTTP requests with JSON bodies according to the OpenAPI spec in `docs/`.
+- Output: JSON responses containing price resources and appropriate HTTP status codes.
+- Errors: 4xx/5xx responses with JSON error details.
 
-- **Java 21**: Modern, high-performance JVM language.
-- **Spring Boot 3.5.5**: Framework for rapid development of production-ready Java applications.
-  - `spring-boot-starter-web`: For building RESTful web services.
-  - `spring-boot-starter-data-jpa`: For data persistence using JPA.
-- **Gradle**: Build automation tool (wrapper included).
-- **H2 Database**: Lightweight, in-memory database for development and testing.
-- **Lombok**: Reduces boilerplate code via annotations (e.g., getters/setters).
-- **JBoss Logging**: Logging framework required by Lombok's `@JBossLog`.
-- **MapStruct**: Code generator for mapping between Java bean types (DTOs, entities, domain models).
-- **JUnit Platform**: Modern testing framework for unit and integration tests.
+## Development prerequisites
 
----
+- JDK installed (Java 21 recommended).
+- No global Gradle installation required — use the included wrapper.
 
-## Architecture
-
-The project follows a layered, modular architecture inspired by Clean Architecture and Domain-Driven Design (DDD):
-
-```
-src/
-└── main/
-    └── java/
-        └── com.bcncgroup.pricingservice/
-            ├── Application.java                # Spring Boot entry point
-            ├── prices/
-            │   ├── application/                # Application services (business logic)
-            │   │   └── port/in/                # Input ports (use cases)
-            │   ├── domain/                     # Domain models (entities, value objects)
-            │   └── infrastructure/
-            │       ├── api/rest/               # REST controllers and API mappers
-            │       └── persistence/jpa/        # JPA repositories, adapters, entity mappers
-            └── shared/                         # Shared exceptions, error models, utilities
-```
-
-**Key architectural concepts:**
-- **Domain Layer**: Contains core business logic and domain models, independent of frameworks.
-- **Application Layer**: Implements use cases and orchestrates domain logic.
-- **Infrastructure Layer**: Handles technical concerns (REST API, persistence, mapping).
-- **Ports & Adapters**: Follows hexagonal architecture, separating business logic from external systems.
-- **Exception Handling**: Centralized error handling for consistent API responses.
-
-**Configuration:**
-- Main config: `src/main/resources/application.yaml`
-- Database schema/data: `src/main/resources/schema.sql`, `data.sql`
-- OpenAPI spec: `docs/pricing-service-openapi-v1.0.0.yaml`
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- JDK 21 installed
-- No need for a global Gradle installation (wrapper included)
-
-### Build
+## Build (PowerShell)
 
 Open PowerShell in the project root and run:
+
 ```
 .\gradlew.bat clean build
 ```
-The resulting JAR will be in `build\libs\`.
 
-### Run
+The resulting jar will be available under `build\libs\`.
 
-Option 1: Run via Gradle (development mode)
+## Run (PowerShell)
+
+Option A — run via Gradle (starts the app in the Gradle process):
+
 ```
 .\gradlew.bat bootRun
 ```
-Option 2: Run the built JAR
+
+Option B — run the built artifact:
+
 ```
 java -jar build\libs\pricing-service-1.0.0.jar
 ```
 
-### Configuration
+## Configuration
 
-- Main config: `src/main/resources/application.yaml`
-- Change DB or server port via `application.yaml` or environment variables
-- DB auto-initialized with `schema.sql` and `data.sql` (H2 in-memory by default)
+- Main configuration file: `src/main/resources/application.yaml`.
+- To change the database or the server port, edit `application.yaml` or provide environment variables.
+- The `schema.sql` and `data.sql` files in `src/main/resources/` are used to initialize the database where supported.
 
----
+## Tests
 
-## API Documentation
+Run the test suite with:
 
-- OpenAPI 3.0 spec: `docs/pricing-service-openapi-v1.0.0.yaml`
-- Use with Swagger UI, Postman, or code generators
-
----
-
-## Testing
-
-Run all tests:
 ```
 .\gradlew.bat test
 ```
-Test reports: `build/reports/tests/test/index.html`
 
----
+Test reports are available at `build/reports/tests/test/index.html`.
 
-## Project Structure
+## API / Documentation
 
-- `src/main/java` — Java source code (see Architecture)
+- The OpenAPI spec is located at `docs/pricing-service-openapi-v1.0.0.yaml`.
+- Use it to generate clients or test endpoints with tools like Postman or Swagger UI.
+
+## Project structure (summary)
+
+- `src/main/java` — Java source code
 - `src/main/resources` — configuration and SQL scripts
 - `build.gradle`, `gradlew`, `gradlew.bat` — build and wrapper
 - `docs/` — OpenAPI spec and additional docs
 
----
+## Local best practices
+
+- Run `clean build` before opening a PR.
+- Keep tests green on the `develop` branch.
+- Update `docs/pricing-service-openapi-v1.0.0.yaml` when endpoints change.
 
 ## Contributing
 
-1. Create a branch (`feature/...`, `fix/...`)
-2. Add/maintain tests for all changes
-3. Open a Pull Request targeting `develop` with a clear description
-
----
+1. Create a branch with a clear name (`feature/...`, `fix/...`).
+2. Add tests for functional changes.
+3. Open a Pull Request targeting `develop` and describe the purpose and verification steps.
 
 ## Troubleshooting
 
-- **Java not found**: Install JDK 21 and check with `java -version`
-- **Permissions**: Run PowerShell as Administrator or adjust execution policies
-- **Dependency issues**: Delete `.gradle` and run `.\gradlew.bat --refresh-dependencies`
+- If Java is missing: install JDK 21 and verify with `java -version`.
+- Permission issues: run PowerShell as Administrator or adjust execution policies.
+- Dependency problems: delete `.gradle` and run `.\gradlew.bat --refresh-dependencies`.
 
----
+## License & contact
 
-## Quick Start
+- Add the project license here (e.g. MIT) or list the contact person/team.
 
-This README is intended for local development and quick onboarding, especially on Windows PowerShell.
+## Quick verification
 
----
+- This README is intended to help local development and quick start on Windows PowerShell.
 
 ## Notes
 
-- Build artifacts are in `build/libs/`
-- Test results are in `build/reports/tests/`
-- Update the OpenAPI spec when endpoints change
+- The repository already contains build artifacts in `build/libs/` and test results in `test-results/`.
 
----
+## Next steps I can do for you
+
+- Add endpoint examples (HTTP requests) extracted from the OpenAPI spec.
+- Create a Dockerfile and docker instructions.
+- Add a CI workflow (GitHub Actions) for build and tests.
+
+If you want any of the above, tell me which one and I'll implement it.
