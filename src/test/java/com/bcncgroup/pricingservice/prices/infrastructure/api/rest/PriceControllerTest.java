@@ -24,10 +24,9 @@ class PriceControllerTest {
     private static final String CURRENCY = "EUR";
 
     private ResultActions performGet(String applicationDate, Long productId) throws Exception {
-        return mockMvc.perform(get("/prices")
-                .param("applicationDate", applicationDate)
-                .param("productId", String.valueOf(productId))
-                .param("brandId", String.valueOf(BRAND_ID)));
+        String url = String.format("/prices/products/%d/brands/%d", productId, BRAND_ID);
+        return mockMvc.perform(get(url)
+                .param("applicationDate", applicationDate));
     }
 
     @Test
