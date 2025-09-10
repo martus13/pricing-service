@@ -10,5 +10,4 @@ public record PriceResponse(
         Long priceList,
         Long productId,
         BigDecimal price,
-        String currency) {
-}
+        String currency) {}

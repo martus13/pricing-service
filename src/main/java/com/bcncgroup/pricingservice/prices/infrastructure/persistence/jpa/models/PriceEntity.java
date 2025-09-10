@@ -6,12 +6,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
-import java.time.Instant;
 
 @Entity
 @Table(name = "PRICES")
@@ -48,5 +47,4 @@ public class PriceEntity {
 
     @Column(name = "CURR", length = 3, nullable = false)
     private String currency;
-
 }

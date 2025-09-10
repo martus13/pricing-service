@@ -118,3 +118,72 @@ Test reports are available at `build/reports/tests/test/index.html`.
 - Add a CI workflow (GitHub Actions) for build and tests.
 
 If you want any of the above, tell me which one and I'll implement it.
+
+---
+
+## Análisis estático y linters (Docker)
+
+Este proyecto incluye un `Dockerfile` preparado para ejecutar análisis estático de código con las siguientes herramientas sobre Java 21:
+
+- PMD
+- Checkstyle
+- SpotBugs
+- Spotless
+
+### Requisitos
+
+- Docker instalado
+- Código fuente en la raíz del proyecto (como está en este repositorio)
+
+### Construir la imagen
+
+```sh
+docker build -t java-linters .
+```
+
+### Lanzar el contenedor
+
+```sh
+docker run --rm -it java-linters bash
+```
+
+### PMD
+
+Analiza el código fuente con PMD:
+
+```sh
+/opt/pmd/bin/run.sh pmd -d src/main/java -R rulesets/java/quickstart.xml -f text
+```
+> Nota: El script `/opt/pmd/bin/pmd.bat` es solo para Windows. En el contenedor Linux, usa siempre `/opt/pmd/bin/run.sh`.
+
+### Checkstyle
+
+Verifica el estilo de código con Checkstyle:
+
+```sh
+java -jar /opt/checkstyle.jar -c /app/google_checks.xml src/main/java
+```
+
+### SpotBugs
+
+Detecta posibles bugs con SpotBugs (analiza los archivos .class, no el código fuente):
+
+Primero, compila el proyecto:
+```sh
+./gradlew build
+```
+
+Luego, ejecuta SpotBugs sobre las clases compiladas:
+```sh
+spotbugs -effort:max -low build/classes/java/main
+```
+
+### Spotless
+
+Formatea el código automáticamente (si está configurado en `build.gradle`):
+
+```sh
+./gradlew spotlessApply
+```
+
+Con estos comandos puedes ejecutar los linters principales sobre el código fuente del proyecto usando el contenedor Docker proporcionado.

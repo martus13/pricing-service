@@ -19,77 +19,77 @@ public class PriceExceptionHandler {
     @ExceptionHandler(value = PriceNotFoundException.class)
     public ResponseEntity<ProblemDetails> handle(PriceNotFoundException e) {
         log.debug("Price not found", e);
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(new ProblemDetails(
-                        String.valueOf(HttpStatus.NOT_FOUND.value()),
-                        "Price Not Found",
-                        e.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(
+                        new ProblemDetails(
+                                String.valueOf(HttpStatus.NOT_FOUND.value()),
+                                "Price Not Found",
+                                e.getMessage()));
     }
 
     @ExceptionHandler(value = PriceBadRequestException.class)
     public ResponseEntity<ProblemDetails> handle(PriceBadRequestException e) {
         log.debug("Bad request", e);
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ProblemDetails(
-                        String.valueOf(HttpStatus.BAD_REQUEST.value()),
-                        "Bad request",
-                        e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(
+                        new ProblemDetails(
+                                String.valueOf(HttpStatus.BAD_REQUEST.value()),
+                                "Bad request",
+                                e.getMessage()));
     }
 
     @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ProblemDetails> handle(MethodArgumentTypeMismatchException e) {
         log.debug(e.getMessage(), e);
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ProblemDetails(
-                        String.valueOf(HttpStatus.BAD_REQUEST.value()),
-                        "Bad Request",
-                        "The request has an invalid format"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(
+                        new ProblemDetails(
+                                String.valueOf(HttpStatus.BAD_REQUEST.value()),
+                                "Bad Request",
+                                "The request has an invalid format"));
     }
 
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public ResponseEntity<ProblemDetails> handle(MissingServletRequestParameterException e) {
         log.debug(e.getMessage(), e);
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ProblemDetails(
-                        String.valueOf(HttpStatus.BAD_REQUEST.value()),
-                        "Bad Request",
-                        "Missing required request parameters"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(
+                        new ProblemDetails(
+                                String.valueOf(HttpStatus.BAD_REQUEST.value()),
+                                "Bad Request",
+                                "Missing required request parameters"));
     }
 
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ProblemDetails> handle(HttpRequestMethodNotSupportedException e) {
         log.warn("Method Not Allowed", e);
-        return ResponseEntity
-                .status(HttpStatus.METHOD_NOT_ALLOWED)
-                .body(new ProblemDetails(
-                        String.valueOf(HttpStatus.METHOD_NOT_ALLOWED.value()),
-                        "Method Not Allowed",
-                        String.format("Request method '%s' not supported", e.getMethod())));
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body(
+                        new ProblemDetails(
+                                String.valueOf(HttpStatus.METHOD_NOT_ALLOWED.value()),
+                                "Method Not Allowed",
+                                String.format("Request method '%s' not supported", e.getMethod())));
     }
 
     @ExceptionHandler(value = IllegalArgumentException.class)
     public ResponseEntity<ProblemDetails> handle(IllegalArgumentException e) {
         log.debug(e.getMessage(), e);
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ProblemDetails(
-                        String.valueOf(HttpStatus.BAD_REQUEST.value()),
-                        "Bad Request",
-                        "Invalid request parameters"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(
+                        new ProblemDetails(
+                                String.valueOf(HttpStatus.BAD_REQUEST.value()),
+                                "Bad Request",
+                                "Invalid request parameters"));
     }
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<ProblemDetails> handle(Exception e) {
         log.error("Unhandled exception", e);
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ProblemDetails(
-                        String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()),
-                        "Internal Server Error",
-                        e.getMessage() != null ? e.getMessage() : "Unexpected error"));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(
+                        new ProblemDetails(
+                                String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                                "Internal Server Error",
+                                e.getMessage() != null ? e.getMessage() : "Unexpected error"));
     }
 }
