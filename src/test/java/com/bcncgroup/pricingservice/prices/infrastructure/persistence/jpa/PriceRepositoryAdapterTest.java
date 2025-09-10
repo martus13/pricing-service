@@ -78,4 +78,20 @@ class PriceRepositoryAdapterTest {
                 priceEntity.getBrandId(), limit1);
         verify(mapper).toPrice(priceEntity);
     }
+
+    @Test
+    void findPrice_shouldReturnEmpty_whenEntityDoesNotExist() {
+        // Arrange
+        var limit1 = PageRequest.of(0, 1);
+        var applicationDate = Instant.parse("2020-06-14T10:00:00Z");
+        when(jpaPriceRepository.findApplicablePrices(applicationDate, priceEntity.getProductId(), priceEntity.getBrandId(), limit1))
+                .thenReturn(List.of());
+
+        // Act
+        var result = adapter.loadApplicablePrice(applicationDate, priceEntity.getProductId(), priceEntity.getBrandId());
+
+        // Assert
+        assertThat(result).isEmpty();
+        verify(jpaPriceRepository).findApplicablePrices(applicationDate, priceEntity.getProductId(), priceEntity.getBrandId(), limit1);
+    }
 }

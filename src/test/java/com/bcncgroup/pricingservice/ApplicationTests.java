@@ -7,7 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 class ApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void mainMethod_shouldRunWithoutExceptions() {
+		// Ejecuta el método main
+		Application.main(new String[]{});
 	}
 
 }
