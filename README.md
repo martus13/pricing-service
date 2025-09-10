@@ -14,10 +14,10 @@ This is a Java Spring Boot microservice exposing price-related operations. It in
 
 ```mermaid
 flowchart TD
-    A[Cliente REST] -->|GET /prices?date=...&productId=...&brandId=...| B[Controlador REST (PriceController)]
-    B --> C[Aplicación (PriceService)]
-    C --> D[Repositorio (PriceRepositoryAdapter)]
-    D --> E[Base de datos H2 (Tabla PRICES)]
+    A[Cliente REST] -->|"GET /prices/products/{productId}/brands/{brandId}?applicationDate=..."| B["Controlador REST (PriceController)"]
+    B --> C["Aplicación (PriceService)"]
+    C --> D["Repositorio (PriceRepositoryAdapter)"]
+    D --> E["Base de datos H2 (Tabla PRICES)"]
     E --> D
     D --> C
     C --> B
