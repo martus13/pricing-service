@@ -1,10 +1,38 @@
 # Pricing Service
 
-Example microservice for price management (pricing-service).
+An example microservice for price management.
+
+## Table of Contents
+- [Description](#description)
+- [Requirements](#requirements)
+- [Technologies](#technologies)
+- [Assumptions](#assumptions)
+- [Development prerequisites](#development-prerequisites)
+- [Build](#build)
+- [Run](#run)
+- [Configuration](#configuration)
+- [API Contract](#api-contract)
+- [API Documentation](#api-documentation)
+- [Tests](#tests)
+- [Project structure](#project-structure)
+- [Static analysis and linters](#static-analysis-and-linters)
+- [Local best practices](#local-best-practices)
+- [Contributing](#contributing)
+- [Troubleshooting](#troubleshooting)
+- [Future improvements](#future-improvements)
+
+---
 
 ## Description
 
-This is a Java Spring Boot microservice exposing price-related operations. It includes persistence, data initialization scripts and an OpenAPI specification located at `docs/pricing-service-openapi-v1.0.0.yaml`.
+This is a **Java Spring Boot microservice** exposing price-related operations.  
+It includes:
+- Persistence with H2 in-memory database
+- Data initialization scripts
+- OpenAPI specification (`docs/pricing-service-openapi-v1.0.0.yaml`)
+- Integration tests for the required business cases
+
+---
 
 ## Requirements
 
@@ -14,110 +42,149 @@ See the [detailed requirements documentation](docs/requirements.md) for prioriti
 - REST endpoint to query prices by date, product, and brand.
 - Price selection by priority and date range.
 - In-memory H2 database with sample data.
-- Integration tests for the 5 cases in the statement.
+- Integration tests for the 5 defined cases.
 
 ---
 
 ## Technologies
 
-- Java + Spring Boot
+- Java 21 + Spring Boot 3
 - Gradle (wrapper included)
+- H2 in-memory database
 - SQL initialization scripts: `src/main/resources/schema.sql` and `src/main/resources/data.sql`
-
-## Assumptions
-
-- The project uses the Gradle wrapper (`gradlew` / `gradlew.bat`).
-- You are working on Windows using PowerShell — commands below are tailored for that shell.
-- The main application class is `com.bcncgroup.pricingservice.Application` (inferred from the compiled classes).
-
-## API contract (brief)
-
-- Input: REST HTTP requests with JSON bodies according to the OpenAPI spec in `docs/`.
-- Output: JSON responses containing price resources and appropriate HTTP status codes.
-- Errors: 4xx/5xx responses with JSON error details.
-
-## Development prerequisites
-
-- JDK installed (Java 21 recommended).
-- No global Gradle installation required — use the included wrapper.
-
-## Build (PowerShell)
-
-Open PowerShell in the project root and run:
-
-```
-.\gradlew.bat clean build
-```
-
-The resulting jar will be available under `build\libs\`.
-
-## Run (PowerShell)
-
-Option A — run via Gradle (starts the app in the Gradle process):
-
-```
-.\gradlew.bat bootRun
-```
-
-Option B — run the built artifact:
-
-```
-java -jar build\libs\pricing-service-1.0.0.jar
-```
-
-## Configuration
-
-- Main configuration file: `src/main/resources/application.yaml`.
-- To change the database or the server port, edit `application.yaml` or provide environment variables.
-- The `schema.sql` and `data.sql` files in `src/main/resources/` are used to initialize the database where supported.
-
-## Tests
-
-Run the test suite with:
-
-```
-.\gradlew.bat test
-```
-
-See the [test strategy](docs/test-strategy.md) for details on test levels, tools, coverage, and CI/CD.
-
-Test reports are available at `build/reports/tests/test/index.html`.
-
-## API / Documentation
-
-- The OpenAPI spec is located at `docs/pricing-service-openapi-v1.0.0.yaml`.
-- Use it to generate clients or test endpoints with tools like Postman or Swagger UI.
-
-## Project structure (summary)
-
-- `src/main/java` — Java source code
-- `src/main/resources` — configuration and SQL scripts
-- `build.gradle`, `gradlew`, `gradlew.bat` — build and wrapper
-- `docs/` — OpenAPI spec and additional docs
-
-## Local best practices
-
-- Run `clean build` before opening a PR.
-- Keep tests green on the `develop` branch.
-- Update `docs/pricing-service-openapi-v1.0.0.yaml` when endpoints change.
-
-## Contributing
-
-1. Create a branch with a clear name (`feature/...`, `fix/...`).
-2. Add tests for functional changes.
-3. Open a Pull Request targeting `develop` and describe the purpose and verification steps.
-
-## Troubleshooting
-
-- If Java is missing: install JDK 21 and verify with `java -version`.
-- Permission issues: run PowerShell as Administrator or adjust execution policies.
-- Dependency problems: delete `.gradle` and run `.\gradlew.bat --refresh-dependencies`.
 
 ---
 
-## Static analysis and linters (Docker)
+## Assumptions
 
-This project includes a `Dockerfile` prepared to run static code analysis with the following tools on Java 21:
+- Project uses the Gradle wrapper (`gradlew` / `gradlew.bat`).
+- Examples are written for **Windows PowerShell**.
+- Main class: `com.bcncgroup.pricingservice.Application`.
+
+---
+
+## Development prerequisites
+
+- JDK 21 (recommended).
+- No global Gradle needed — use the included wrapper.
+
+---
+
+## Build
+
+Open PowerShell in the project root and run:
+
+```powershell
+.\gradlew.bat clean build
+```
+
+Jar will be generated in build\libs\.
+
+---
+
+## Run
+
+You can run the service in different ways:
+
+### Option A — Run with Gradle
+Runs the app directly from the Gradle process:
+
+```powershell
+.\gradlew.bat bootRun
+```
+
+### Option B — Run the built artifact
+First, build the project:
+
+```powershell
+.\gradlew.bat clean build
+```
+
+Then start the service with:
+```powershell
+java -jar build\libs\pricing-service-1.0.0.jar
+```
+
+### Option C — Run with Docker (optional)
+If you have Docker installed, you can build and run the image:
+
+```powershell
+docker build -t pricing-service .
+docker run -p 8080:8080 pricing-service
+```
+The service will be available at http://localhost:8080
+
+---
+
+## Configuration
+
+- The application can be configured using the file `src/main/resources/application.yaml`.
+- To change the database or the server port, edit `application.yaml` or provide environment variables.
+- The `schema.sql` and `data.sql` files in `src/main/resources/` are used to initialize the database where supported.
+
+---
+
+## API Contract
+
+- **Input:** REST HTTP requests with JSON bodies according to the OpenAPI spec in `docs/`.
+- **Output:** JSON responses with price data.
+- **Errors:** 4xx/5xx with JSON error details.
+
+## API Documentation
+
+- The OpenAPI specification is located in the `docs/` folder.  
+- It can be imported into Postman or visualized using Swagger UI at `http://localhost:8080/swagger-ui.html`.
+
+### **Example request/response:**
+This request fetches the price for product `35455` and brand `1` on a specific date.
+
+```sh
+curl -X GET 'http://localhost:8080/prices/products/35455/brands/1?applicationDate=2020-06-14T10:00:00Z'
+
+```
+
+Expected Response:
+
+```sh
+{
+  "productId": 35455,
+  "brandId": 1,
+  "priceList": 1,
+  "startDate": "2020-06-14T00:00:00Z",
+  "endDate": "2020-12-31T23:59:59Z",
+  "finalPrice": 35.50
+}
+```
+
+For a complete API definition, see the [OpenAPI specification](docs/pricing-service-openapi-v1.0.0.yaml).
+
+---
+
+## Tests
+
+Run all tests:
+
+```powershell
+.\gradlew.bat test
+```
+Reports are generated in `build/reports/tests/test/index.html`.  
+
+Additional details can be found in [test strategy](docs/test-strategy.md) documentation.
+
+---
+
+## Project structure
+
+- `src/main/java` — source code  
+- `src/main/resources` — configuration & SQL  
+- `docs/` — OpenAPI specification and additional documentation  
+- `build.gradle`, `gradlew*` — build system files  
+
+---
+
+## Static analysis and linters
+
+This project includes a `Dockerfile` prepared to run static code analysis with the following tools:
 
 - PMD
 - Checkstyle
@@ -185,3 +252,37 @@ Automatically format the code (if configured in `build.gradle`):
 ```
 
 With these commands you can run the main linters on the project's source code using the provided Docker container.
+
+---
+
+## Local best practices
+
+- Run `clean build` before opening a PR.
+- Keep tests green on the `develop` branch.
+- Update the OpenAPI specification when endpoints change.  
+
+---
+
+## Contributing
+
+1. Use clear branch names (`feature/...`, `fix/...`).  
+2. Add or update tests when making changes.  
+3. Open a pull request to the `develop` branch with a description and verification steps.  
+
+---
+
+## Troubleshooting
+
+- Ensure Java 21 is installed and available in the system path.  
+- Ensure execution rights for the Gradle wrapper scripts.  
+- If dependencies cause issues, clear the Gradle cache and refresh them (`.\gradlew.bat --refresh-dependencies`).  
+
+---
+
+## Future improvements
+
+- JWT authentication  
+- Replace H2 with PostgreSQL  
+- Docker Compose for quick startup  
+- Monitoring with Spring Boot Actuator  
+- Kubernetes deployment examples
