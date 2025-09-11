@@ -25,7 +25,9 @@ public interface JpaPriceRepository extends JpaRepository<PriceEntity, Long> {
      * @return List of matching {@link PriceEntity}.
      */
     @Query("select p from PriceEntity p "
-            + "where :applicationDate between p.startDate and p.endDate and p.productId = :productId and p.brandId = :brandId "
+            + "where :applicationDate between p.startDate and p.endDate "
+            + "and p.productId = :productId "
+            + "and p.brandId = :brandId "
             + "order by p.priority DESC")
     List<PriceEntity> findApplicablePrices(
             @Param("applicationDate") Instant applicationDate,

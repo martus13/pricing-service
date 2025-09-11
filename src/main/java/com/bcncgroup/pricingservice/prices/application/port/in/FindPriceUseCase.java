@@ -2,7 +2,6 @@ package com.bcncgroup.pricingservice.prices.application.port.in;
 
 import com.bcncgroup.pricingservice.prices.domain.Price;
 import com.bcncgroup.pricingservice.shared.domain.exceptions.PriceNotFoundException;
-
 import java.time.Instant;
 
 /**

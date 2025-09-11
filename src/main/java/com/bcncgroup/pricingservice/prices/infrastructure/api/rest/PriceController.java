@@ -48,8 +48,10 @@ public class PriceController {
 
         OffsetDateTime applicationDateTime = parseApplicationDate(applicationDate);
 
-        log.debugv("GET /prices/products/%d/brands/%d?applicationDate=%s"
-                .formatted(productId, brandId, applicationDateTime.toString()));
+        log.debugv(
+                "GET /prices/products/%d/brands/%d?applicationDate=%s"
+                        .formatted(productId, brandId, applicationDateTime.toString())
+        );
 
         return ResponseEntity.ok(
                 priceToResponseMapper.toResponse(
