@@ -113,26 +113,6 @@ Test reports are available at `build/reports/tests/test/index.html`.
 - Permission issues: run PowerShell as Administrator or adjust execution policies.
 - Dependency problems: delete `.gradle` and run `.\gradlew.bat --refresh-dependencies`.
 
-## License & contact
-
-- Add the project license here (e.g. MIT) or list the contact person/team.
-
-## Quick verification
-
-- This README is intended to help local development and quick start on Windows PowerShell.
-
-## Notes
-
-- The repository already contains build artifacts in `build/libs/` and test results in `test-results/`.
-
-## Next steps I can do for you
-
-- Add endpoint examples (HTTP requests) extracted from the OpenAPI spec.
-- Create a Dockerfile and docker instructions.
-- Add a CI workflow (GitHub Actions) for build and tests.
-
-If you want any of the above, tell me which one and I'll implement it.
-
 ---
 
 ## Static analysis and linters (Docker)
