@@ -79,6 +79,8 @@ Run the test suite with:
 .\gradlew.bat test
 ```
 
+See the [test strategy](docs/test-strategy.md) for details on test levels, tools, coverage, and CI/CD.
+
 Test reports are available at `build/reports/tests/test/index.html`.
 
 ## API / Documentation

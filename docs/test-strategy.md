@@ -1,5 +1,9 @@
 # Test Strategy – Pricing Service
 
+## Introduction
+
+This document outlines the test strategy for the Pricing Service microservice. The goal is to ensure the quality, robustness, and maintainability of the service by detecting defects early, providing fast feedback, and enabling safe extensibility.
+
 ## 1. Objectives
 
 - Ensure the quality, robustness, and maintainability of the service.
@@ -11,15 +15,18 @@
 
 - **Unit Tests:**  
   Validate the behavior of individual components (services, controllers, mappers, etc.).  
-  Tools: JUnit 5, Mockito.
+  *Tools:* JUnit 5, Mockito.  
+  *Example:* Verify that the price calculation method returns the expected value for a given set of parameters.
 
 - **Integration Tests:**  
   Verify the interaction between components and integration with external dependencies (repositories, database, etc.).  
-  Tools: JUnit 5, Spring Boot Test, H2 (in-memory DB).
+  *Tools:* JUnit 5, Spring Boot Test, H2 (in-memory DB).  
+  *Example:* Ensure that a REST request stores and retrieves data correctly from the database.
 
 - **API Tests (optional):**  
   Validate the exposed REST endpoints.  
-  Tools: MockMvc, RestAssured.
+  *Tools:* MockMvc, RestAssured.  
+  *Example:* Test that the `/prices/products/{productId}/brands/{brandId}` endpoint responds correctly to different input scenarios.
 
 ## 3. Tools
 
@@ -29,9 +36,9 @@
 - **SonarQube:** Static analysis for quality and security.
 - **CI/CD (GitHub Actions, Jenkins, GitLab CI, etc.):** Automated test execution and analysis.
 
-## 4. Desired Coverage
+## 4. Recommended Coverage
 
-- **Recommended minimum coverage:**  
+- **Minimum recommended coverage:**  
   - Unit: ≥ 80% of lines and critical branches.
   - Integration: Coverage of main business flows.
 - **Code coverage periodically reviewed in SonarQube.**
@@ -60,15 +67,20 @@
   - Validate code and test quality.
   - Review coverage and edge cases.
 
-## 8. Extensibility
+## 8. Extensibility and Best Practices
 
 - New features must include their own tests.
 - Refactorings must maintain or improve coverage.
 - Document relevant test cases in each PR.
+- Keep tests readable, independent, and fast.
+- Use descriptive names for test methods.
+- Avoid logic in test setup; use builders or factories for test data.
 
 ---
 
-**Visual summary:**
+## Visual Summary
+
+The following diagram summarizes the quality flow in the development cycle:
 
 ```mermaid
 flowchart TD
@@ -80,3 +92,7 @@ flowchart TD
     F -- No --> D
     F -- Yes --> G[Peer review]
     G --> H[Merge allowed]
+```
+
+**Explanation:**  
+Every change triggers automated tests and static analysis. Only if all tests pass and quality gates are met, the code is eligible for peer review and merging. This ensures that only high-quality, well-tested code is integrated into the main branch.

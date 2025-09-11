@@ -15,7 +15,7 @@ flowchart TD
 ```
 
 **Flow description:**
-1. The client makes a GET request to the `/prices` endpoint with the required parameters.
+1. The client makes a GET request to the `/prices/products/{productId}/brands/{brandId}` endpoint with the required parameters.
 2. The REST controller receives the request and delegates the logic to the application service.
 3. The service queries the repository, which accesses the H2 database.
 4. The applicable price is selected according to priority and date rules.
@@ -41,10 +41,3 @@ flowchart TD
 | Return a single result (not a list)                                      | Must-have   | Specified in the statement.                                                                |
 | Formal validation of requirements with the team/client                   | Must-have   | Prevents misunderstandings and ensures alignment of expectations.                          |
 | Extension to other products/brands/currencies                            | Won't-have  | Out of scope for the current statement.                                                    |
-
----
-
-## 3. Formal Requirements Validation
-
-**Recommendation:**  
-Before proceeding with implementation, this document should be reviewed with the team or client to confirm that the interpretation and prioritization of requirements is correct and complete. This will prevent misunderstandings and allow expectations to be aligned.
