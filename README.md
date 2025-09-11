@@ -14,6 +14,7 @@ An example microservice for price management.
 - [API Contract](#api-contract)
 - [API Documentation](#api-documentation)
 - [Tests](#tests)
+- [Architecture and Design Principles](#architecture-and-design-principles)
 - [Project structure](#project-structure)
 - [Static analysis and linters](#static-analysis-and-linters)
 - [Local best practices](#local-best-practices)
@@ -170,6 +171,38 @@ Run all tests:
 Reports are generated in `build/reports/tests/test/index.html`.  
 
 Additional details can be found in [test strategy](docs/test-strategy.md) documentation.
+
+---
+
+## Architecture and Design Principles
+
+The service follows a hexagonal architecture, separating concerns into layers:
+
+```mermaid
+flowchart TD
+    A[REST Client] -->|"GET /prices/products/{productId}/brands/{brandId}?applicationDate=..."| B["REST Controller (PriceController)"]
+    B --> C["Application (PriceService)"]
+    C --> D["Repository (PriceRepositoryAdapter)"]
+    D --> E["H2 Database (PRICES Table)"]
+    E --> D
+    D --> C
+    C --> B
+    B -->|Response: product id, brand id, price list, dates, price| A
+```
+
+**Main components:**
+- **REST Controller:** Receives HTTP requests and delegates to the application layer.
+- **Application Service:** Contains business logic for price selection.
+- **Repository Adapter:** Handles data access and persistence.
+- **Database:** Stores price data.
+
+### Key Design Decisions & Efficiency
+
+To ensure performance and scalability, the following principles were applied:
+
+- **Database-First Filtering:** The service delegates all filtering, sorting, and pagination logic directly to the database engine. This is crucial for optimal performance with large datasets. 
+- **Minimal Memory Footprint:** By crafting precise queries, only the necessary data is fetched from the database. No in-memory filtering or redundant loops are performed on the application side.
+- **Extensibility through Abstraction:** The use of interfaces (ports) and adapters allows for future optimizations, such as adding a caching layer, without altering the core business logic in the application service.
 
 ---
 
