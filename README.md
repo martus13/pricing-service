@@ -6,6 +6,61 @@ Example microservice for price management (pricing-service).
 
 This is a Java Spring Boot microservice exposing price-related operations. It includes persistence, data initialization scripts and an OpenAPI specification located at `docs/pricing-service-openapi-v1.0.0.yaml`.
 
+---
+
+## Requirements Interpretation and Prioritization (MoSCoW)
+
+### 1. Data Flow Diagram (DFD) / Blueprint
+
+```mermaid
+flowchart TD
+    A[Cliente REST] -->|"GET /prices/products/{productId}/brands/{brandId}?applicationDate=..."| B["Controlador REST (PriceController)"]
+    B --> C["Aplicación (PriceService)"]
+    C --> D["Repositorio (PriceRepositoryAdapter)"]
+    D --> E["Base de datos H2 (Tabla PRICES)"]
+    E --> D
+    D --> C
+    C --> B
+    B -->|Response: product id, brand id, rate, dates, price| A
+```
+
+**Descripción del flujo:**
+1. El cliente realiza una petición GET al endpoint `/prices` con los parámetros requeridos.
+2. El controlador REST recibe la petición y delega la lógica al servicio de aplicación.
+3. El servicio consulta el repositorio, que accede a la base de datos H2.
+4. Se selecciona el precio aplicable según las reglas de prioridad y fechas.
+5. Se devuelve la respuesta con los datos solicitados.
+
+---
+
+### 2. Priorización de Requisitos (MoSCoW)
+
+| Requisito                                                                 | Prioridad  | Justificación                                                                                 |
+|---------------------------------------------------------------------------|------------|----------------------------------------------------------------------------------------------|
+| Endpoint REST GET que acepte fecha, id de producto e id de cadena         | Must-have  | Es el núcleo funcional del servicio.                                                         |
+| Devolver: id producto, id cadena, tarifa, fechas de aplicación, precio    | Must-have  | Especificado como salida obligatoria.                                                        |
+| Base de datos en memoria H2, inicializada con los datos de ejemplo        | Must-have  | Permite pruebas y funcionamiento autónomo.                                                   |
+| Selección de tarifa por prioridad y rango de fechas                       | Must-have  | Lógica de negocio principal.                                                                 |
+| Pruebas de integración para los 5 casos del enunciado                     | Must-have  | Validación funcional y de negocio.                                                           |
+| Arquitectura hexagonal                                                    | Should-have| Mejora mantenibilidad y separación de capas.                                                 |
+| Claridad y calidad de código (SOLID, buenas prácticas)                    | Should-have| Facilita mantenimiento y escalabilidad.                                                      |
+| Documentación (README, requisitos, diagrama)                              | Should-have| Mejora la comprensión y validación del desarrollo.                                           |
+| Control de versiones (Git)                                                | Should-have| Buenas prácticas de desarrollo colaborativo.                                                 |
+| Eficiencia en la extracción de datos                                      | Could-have | Optimización, pero no bloqueante para la funcionalidad básica.                               |
+| Configuración externa (application.yaml, Dockerfile)                      | Could-have | Facilita despliegue y portabilidad.                                                          |
+| Devolver único resultado (no lista)                                       | Must-have  | Especificado en el enunciado.                                                                |
+| Validación formal de requisitos con el equipo/cliente                     | Must-have  | Evita malentendidos y asegura alineación de expectativas.                                    |
+| Ampliación a otros productos/cadenas/monedas                              | Won't-have | Fuera del alcance del enunciado actual.                                                      |
+
+---
+
+### 3. Validación Formal de Requisitos
+
+**Recomendación:**  
+Antes de continuar con la implementación, se debe revisar este documento con el equipo o cliente para confirmar que la interpretación y priorización de los requisitos es correcta y completa. Esto evitará malentendidos y permitirá alinear expectativas.
+
+---
+
 ## Technologies
 
 - Java + Spring Boot
@@ -118,3 +173,76 @@ Test reports are available at `build/reports/tests/test/index.html`.
 - Add a CI workflow (GitHub Actions) for build and tests.
 
 If you want any of the above, tell me which one and I'll implement it.
+
+---
+
+## Análisis estático y linters (Docker)
+
+Este proyecto incluye un `Dockerfile` preparado para ejecutar análisis estático de código con las siguientes herramientas sobre Java 21:
+
+- PMD
+- Checkstyle
+- SpotBugs
+- Spotless
+
+### Requisitos
+
+- Docker instalado
+- Código fuente en la raíz del proyecto (como está en este repositorio)
+
+### Construir la imagen
+
+```sh
+docker build -t java-linters .
+```
+
+### Lanzar el contenedor
+
+```sh
+docker run --rm -it java-linters bash
+```
+
+### PMD
+
+Analiza el código fuente con PMD:
+
+```sh
+/opt/pmd/bin/run.sh pmd -d src/main/java -R rulesets/java/quickstart.xml -f text
+```
+> Nota: El script `/opt/pmd/bin/pmd.bat` es solo para Windows. En el contenedor Linux, usa siempre `/opt/pmd/bin/run.sh`.
+
+### Checkstyle
+
+Verifica el estilo de código con Checkstyle:
+
+```sh
+java -jar /opt/checkstyle.jar -c /app/google_checks.xml src/main/java
+```
+
+### SpotBugs
+
+Ahora SpotBugs se ejecuta directamente con Gradle, sin necesidad de Docker.
+
+Primero, compila el proyecto (opcional, SpotBugs compila automáticamente si es necesario):
+
+```sh
+./gradlew spotbugsMain
+```
+
+El informe HTML estará disponible en `build/reports/spotbugs/main.html`.
+
+Para analizar los tests:
+```sh
+./gradlew spotbugsTest
+```
+El informe estará en `build/reports/spotbugs/test.html`.
+
+### Spotless
+
+Formatea el código automáticamente (si está configurado en `build.gradle`):
+
+```sh
+./gradlew spotlessApply
+```
+
+Con estos comandos puedes ejecutar los linters principales sobre el código fuente del proyecto usando el contenedor Docker proporcionado.
