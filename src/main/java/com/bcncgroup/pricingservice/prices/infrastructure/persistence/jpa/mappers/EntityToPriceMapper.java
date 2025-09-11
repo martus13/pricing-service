@@ -6,5 +6,11 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface EntityToPriceMapper {
+    /**
+     * Maps a persistence {@link PriceEntity} to the domain {@link Price} record.
+     *
+     * @param priceEntity persistence entity
+     * @return domain price
+     */
     Price toPrice(PriceEntity priceEntity);
 }

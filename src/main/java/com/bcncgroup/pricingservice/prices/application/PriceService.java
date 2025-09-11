@@ -14,6 +14,15 @@ public class PriceService implements FindPriceUseCase {
 
     private final LoadPricePort loadPricePort;
 
+    /**
+     * Find the applicable price for the given application date, product and brand.
+     *
+     * @param applicationDate instant of application
+     * @param productId       id of the product
+     * @param brandId         id of the brand
+     * @return the applicable {@link Price}
+     * @throws PriceNotFoundException if no price is found for the input criteria
+     */
     @Override
     public Price findPrice(Instant applicationDate, Long productId, Long brandId) {
         return loadPricePort.loadApplicablePrice(applicationDate, productId, brandId)

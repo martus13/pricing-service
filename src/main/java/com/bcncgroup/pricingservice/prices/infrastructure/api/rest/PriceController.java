@@ -40,6 +40,16 @@ public class PriceController {
                         findPriceUseCase.findPrice(applicationDateTime.toInstant(), productId, brandId)));
     }
 
+    /**
+     * GET endpoint that returns the price for a product and brand at the given
+     * application date.
+     *
+     * @param productId       id of the product
+     * @param brandId         id of the brand
+     * @param applicationDate date-time string in ISO-8601 format
+     * @return HTTP 200 with the {@link PriceResponse} when found
+     */
+
     private OffsetDateTime parseApplicationDate(String applicationDate) {
         try {
             return OffsetDateTime.parse(applicationDate);
