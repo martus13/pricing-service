@@ -14,7 +14,7 @@ public class PriceBadRequestException extends RuntimeException {
      * Constructor.
      *
      * @param message Error message.
-     * @param cause Root cause.
+     * @param e Root cause.
      */
     public PriceBadRequestException(String message, Throwable e) {
         super(message, e);

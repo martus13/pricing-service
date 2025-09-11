@@ -4,7 +4,6 @@ import com.bcncgroup.pricingservice.prices.application.port.in.FindPriceUseCase;
 import com.bcncgroup.pricingservice.prices.infrastructure.api.rest.mappers.PriceToResponseMapper;
 import com.bcncgroup.pricingservice.prices.infrastructure.api.rest.models.PriceResponse;
 import com.bcncgroup.pricingservice.shared.domain.exceptions.PriceBadRequestException;
-
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Manages the RESTful API endpoints for querying product prices.
- * <p>
- * This controller acts as a <strong>primary adapter</strong> in the hexagonal architecture,
+ *
+ * <p>This controller acts as a <strong>primary adapter</strong> in the hexagonal architecture,
  * translating incoming HTTP requests into calls to the application's use cases (input ports).
  * It is responsible for request validation, invoking the core business logic, and mapping
  * the results back to an appropriate HTTP response.
