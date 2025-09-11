@@ -5,17 +5,17 @@ import java.time.Instant;
 import java.util.Optional;
 
 /**
- * Outbound port that exposes the operation to load an applicable price from the
- * persistence layer.
+ * Output port for accessing price data.
  */
 public interface LoadPricePort {
+    
     /**
-     * Loads an applicable price for the given instant, product and brand.
+     * Finds the applicable price for the given date, product, and brand.
      *
-     * @param applicationDate instant to evaluate
-     * @param productId       product identifier
-     * @param brandId         brand identifier
-     * @return optional domain {@link Price} when found
+     * @param applicationDate Date and time to apply the price.
+     * @param productId Product identifier.
+     * @param brandId Brand identifier.
+     * @return Optional with the applicable {@link Price}, or empty if not found.
      */
     Optional<Price> loadApplicablePrice(Instant applicationDate, Long productId, Long brandId);
 }

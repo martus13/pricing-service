@@ -9,21 +9,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+/**
+ * JPA repository for {@link PriceEntity}.
+ */
 @Repository
 public interface JpaPriceRepository extends JpaRepository<PriceEntity, Long> {
 
     /**
-     * Query to find price entities that are applicable for the given application
-     * date,
-     * product and brand. Results are ordered by priority descending.
+     * Finds prices for the given date, product, and brand, ordered by priority descending.
      *
-     * @param applicationDate instant to check inclusion in the price validity
-     *                        window
-     * @param productId       product identifier
-     * @param brandId         brand identifier
-     * @param pageable        pagination configuration (expected page size of 1 when
-     *                        used)
-     * @return list of matching {@link PriceEntity}
+     * @param applicationDate Date to check.
+     * @param productId Product identifier.
+     * @param brandId Brand identifier.
+     * @param pageable Pagination.
+     * @return List of matching {@link PriceEntity}.
      */
     @Query("select p from PriceEntity p "
             + "where :applicationDate between p.startDate and p.endDate and p.productId = :productId and p.brandId = :brandId "

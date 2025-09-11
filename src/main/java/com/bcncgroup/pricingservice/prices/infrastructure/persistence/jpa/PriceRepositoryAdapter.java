@@ -11,6 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Persistence adapter for loading prices.
+ */
 @Repository
 @AllArgsConstructor
 public class PriceRepositoryAdapter implements LoadPricePort {
@@ -18,6 +21,14 @@ public class PriceRepositoryAdapter implements LoadPricePort {
     private final EntityToPriceMapper entityToPriceMapper;
     private final JpaPriceRepository jpaPriceRepository;
 
+    /**
+     * Finds the applicable price for the given date, product, and brand.
+     *
+     * @param applicationDate Date and time to apply the price.
+     * @param productId Product identifier.
+     * @param brandId Brand identifier.
+     * @return Optional with the applicable {@link Price}, or empty if not found.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<Price> loadApplicablePrice(Instant applicationDate, Long productId, Long brandId) {

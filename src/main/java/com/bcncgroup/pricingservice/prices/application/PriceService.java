@@ -8,6 +8,10 @@ import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Application service for finding applicable prices.
+ * Implements {@link FindPriceUseCase}.
+ */
 @Service
 @RequiredArgsConstructor
 public class PriceService implements FindPriceUseCase {
@@ -15,13 +19,13 @@ public class PriceService implements FindPriceUseCase {
     private final LoadPricePort loadPricePort;
 
     /**
-     * Find the applicable price for the given application date, product and brand.
+     * Finds the applicable price for the given date, product, and brand.
      *
-     * @param applicationDate instant of application
-     * @param productId       id of the product
-     * @param brandId         id of the brand
-     * @return the applicable {@link Price}
-     * @throws PriceNotFoundException if no price is found for the input criteria
+     * @param applicationDate Date and time to apply the price.
+     * @param productId Product identifier.
+     * @param brandId Brand identifier.
+     * @return The applicable {@link Price}.
+     * @throws PriceNotFoundException if no price is found.
      */
     @Override
     public Price findPrice(Instant applicationDate, Long productId, Long brandId) {

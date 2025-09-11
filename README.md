@@ -21,7 +21,7 @@ flowchart TD
     E --> D
     D --> C
     C --> B
-    B -->|Respuesta: id producto, id cadena, tarifa, fechas, precio| A
+    B -->|Response: product id, brand id, rate, dates, price| A
 ```
 
 **Descripción del flujo:**

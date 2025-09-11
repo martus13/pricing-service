@@ -12,19 +12,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * JPA entity for the PRICES table.
+ */
 @Entity
 @Table(name = "PRICES")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PriceEntity {
-
-    /**
-     * JPA entity representing the PRICES table.
-     * <p>
-     * Used only for persistence mapping between the database table and the domain
-     * layer. Field names reflect the database column names.
-     */
 
     @Id
     @Column(name = "ID")

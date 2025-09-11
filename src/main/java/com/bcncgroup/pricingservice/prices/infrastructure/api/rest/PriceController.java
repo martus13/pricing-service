@@ -4,6 +4,7 @@ import com.bcncgroup.pricingservice.prices.application.port.in.FindPriceUseCase;
 import com.bcncgroup.pricingservice.prices.infrastructure.api.rest.mappers.PriceToResponseMapper;
 import com.bcncgroup.pricingservice.prices.infrastructure.api.rest.models.PriceResponse;
 import com.bcncgroup.pricingservice.shared.domain.exceptions.PriceBadRequestException;
+
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Manages the RESTful API endpoints for querying product prices.
+ * <p>
+ * This controller acts as a <strong>primary adapter</strong> in the hexagonal architecture,
+ * translating incoming HTTP requests into calls to the application's use cases (input ports).
+ * It is responsible for request validation, invoking the core business logic, and mapping
+ * the results back to an appropriate HTTP response.
+ */
 @JBossLog
 @RestController
 @RequestMapping("/prices")
@@ -24,6 +33,14 @@ public class PriceController {
     private final FindPriceUseCase findPriceUseCase;
     private final PriceToResponseMapper priceToResponseMapper;
 
+    /**
+     * Returns the applicable price for the given product, brand, and date.
+     *
+     * @param productId Product identifier.
+     * @param brandId Brand identifier.
+     * @param applicationDate Date and time in ISO-8601 format.
+     * @return 200 OK with {@link PriceResponse} if found, 404 if not found, 400 if date is invalid.
+     */
     @GetMapping("/products/{productId}/brands/{brandId}")
     public ResponseEntity<PriceResponse> getPrice(
             @PathVariable Long productId,
@@ -39,16 +56,6 @@ public class PriceController {
                 priceToResponseMapper.toResponse(
                         findPriceUseCase.findPrice(applicationDateTime.toInstant(), productId, brandId)));
     }
-
-    /**
-     * GET endpoint that returns the price for a product and brand at the given
-     * application date.
-     *
-     * @param productId       id of the product
-     * @param brandId         id of the brand
-     * @param applicationDate date-time string in ISO-8601 format
-     * @return HTTP 200 with the {@link PriceResponse} when found
-     */
 
     private OffsetDateTime parseApplicationDate(String applicationDate) {
         try {

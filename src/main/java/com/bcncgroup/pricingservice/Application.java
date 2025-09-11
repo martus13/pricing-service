@@ -17,9 +17,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Application {
 
     /**
-     * The main method used to launch the Spring Boot application.
+     * Entry point for the Spring Boot application.
      *
-     * @param args Command-line arguments that can be passed at application startup.
+     * @param args Command-line arguments.
      */
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
