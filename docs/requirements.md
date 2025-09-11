@@ -2,24 +2,7 @@
 
 ## 1. Data Flow Diagram (DFD) / Blueprint
 
-```mermaid
-flowchart TD
-    A[REST Client] -->|"GET /prices/products/{productId}/brands/{brandId}?applicationDate=..."| B["REST Controller (PriceController)"]
-    B --> C["Application (PriceService)"]
-    C --> D["Repository (PriceRepositoryAdapter)"]
-    D --> E["H2 Database (PRICES Table)"]
-    E --> D
-    D --> C
-    C --> B
-    B -->|Response: product id, brand id, price list, dates, price| A
-```
-
-**Flow description:**
-1. The client makes a GET request to the `/prices/products/{productId}/brands/{brandId}` endpoint with the required parameters.
-2. The REST controller receives the request and delegates the logic to the application service.
-3. The service queries the repository, which accesses the H2 database.
-4. The applicable price is selected according to priority and date rules.
-5. The response is returned with the requested data.
+El diagrama de flujo de datos y la arquitectura del sistema se encuentran en el [README.md](../README.md#architecture-and-design-principles).
 
 ---
 
