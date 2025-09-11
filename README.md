@@ -221,17 +221,21 @@ java -jar /opt/checkstyle.jar -c /app/google_checks.xml src/main/java
 
 ### SpotBugs
 
-Detecta posibles bugs con SpotBugs (analiza los archivos .class, no el código fuente):
+Ahora SpotBugs se ejecuta directamente con Gradle, sin necesidad de Docker.
 
-Primero, compila el proyecto:
+Primero, compila el proyecto (opcional, SpotBugs compila automáticamente si es necesario):
+
 ```sh
-./gradlew build
+./gradlew spotbugsMain
 ```
 
-Luego, ejecuta SpotBugs sobre las clases compiladas:
+El informe HTML estará disponible en `build/reports/spotbugs/main.html`.
+
+Para analizar los tests:
 ```sh
-spotbugs -effort:max -low build/classes/java/main
+./gradlew spotbugsTest
 ```
+El informe estará en `build/reports/spotbugs/test.html`.
 
 ### Spotless
 

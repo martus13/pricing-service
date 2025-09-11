@@ -19,20 +19,11 @@ RUN wget -O /tmp/pmd.zip https://github.com/pmd/pmd/releases/download/pmd_releas
 # Descarga Checkstyle
 RUN wget -O /opt/checkstyle.jar https://github.com/checkstyle/checkstyle/releases/download/checkstyle-${CHECKSTYLE_VERSION}/checkstyle-${CHECKSTYLE_VERSION}-all.jar
 
-# Descarga SpotBugs
-RUN wget -O /tmp/spotbugs.tgz https://github.com/spotbugs/spotbugs/releases/download/${SPOTBUGS_VERSION}/spotbugs-${SPOTBUGS_VERSION}.tgz \
-    && tar -xzf /tmp/spotbugs.tgz -C /opt \
-    && mv /opt/spotbugs-${SPOTBUGS_VERSION} /opt/spotbugs \
-    && rm /tmp/spotbugs.tgz
-
 # Da permisos de ejecución a los scripts de PMD
 RUN chmod +x /opt/pmd/bin/pmd*
 
-# Da permisos de ejecución a los scripts de SpotBugs
-RUN chmod +x /opt/spotbugs/bin/spotbugs*
-
 # Añade binarios al PATH
-ENV PATH="/opt/pmd/bin:/opt/spotbugs/bin:${PATH}"
+ENV PATH="/opt/pmd/bin:${PATH}"
 
 # Directorio de trabajo
 WORKDIR /app
@@ -44,4 +35,4 @@ COPY . /app
 RUN wget -O /app/google_checks.xml https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-10.16.0/src/main/resources/google_checks.xml
 
 # Comando por defecto: muestra ayuda de las herramientas (sintaxis JSON recomendada)
-CMD ["/bin/sh", "-c", "echo 'PMD: pmd.sh check -d src/main/java -R rulesets/java/quickstart.xml -f text' && echo 'Checkstyle: java -jar /opt/checkstyle.jar -c /app/google_checks.xml src/main/java' && echo 'SpotBugs: spotbugs -textUI -effort:max -low src/main/java' && echo 'Spotless: ./gradlew spotlessApply'"]
+CMD ["/bin/sh", "-c", "echo 'PMD: pmd.sh check -d src/main/java -R rulesets/java/quickstart.xml -f text' && echo 'Checkstyle: java -jar /opt/checkstyle.jar -c /app/google_checks.xml src/main/java' && echo 'Spotless: ./gradlew spotlessApply'"]

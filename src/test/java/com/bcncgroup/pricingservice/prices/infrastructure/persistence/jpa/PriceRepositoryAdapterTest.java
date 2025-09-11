@@ -10,7 +10,6 @@ import com.bcncgroup.pricingservice.prices.infrastructure.persistence.jpa.models
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,33 +29,27 @@ class PriceRepositoryAdapterTest {
     @InjectMocks
     private PriceRepositoryAdapter adapter;
 
-    private PriceEntity priceEntity;
-    private Price expectedPrice;
+    private final PriceEntity priceEntity =
+            new PriceEntity(
+                    1L,
+                    1L,
+                    Instant.parse("2020-06-14T10:00:00Z"),
+                    Instant.parse("2020-12-31T23:59:59Z"),
+                    1L,
+                    35455L,
+                    0,
+                    new BigDecimal("35.50"),
+                    "EUR");
 
-    @BeforeEach
-    void setUp() {
-        priceEntity =
-                new PriceEntity(
-                        1L,
-                        1L,
-                        Instant.parse("2020-06-14T10:00:00Z"),
-                        Instant.parse("2020-12-31T23:59:59Z"),
-                        1L,
-                        35455L,
-                        0,
-                        new BigDecimal("35.50"),
-                        "EUR");
-
-        expectedPrice = new Price(
-                priceEntity.getPriceList(),
-                priceEntity.getStartDate(),
-                priceEntity.getEndDate(),
-                priceEntity.getBrandId(),
-                priceEntity.getProductId(),
-                priceEntity.getPriority(),
-                priceEntity.getPrice(),
-                priceEntity.getCurrency());
-    }
+    private final Price expectedPrice = new Price(
+            priceEntity.getPriceList(),
+            priceEntity.getStartDate(),
+            priceEntity.getEndDate(),
+            priceEntity.getBrandId(),
+            priceEntity.getProductId(),
+            priceEntity.getPriority(),
+            priceEntity.getPrice(),
+            priceEntity.getCurrency());
 
     @Test
     void findPrice_shouldReturnMappedPrice_whenEntityExists() {
