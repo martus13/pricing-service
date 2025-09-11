@@ -1,5 +1,10 @@
 package com.bcncgroup.pricingservice.prices.infrastructure.api.rest;
 
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -7,17 +12,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 class PriceControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
     private static final Long PRODUCT_ID = 35455L;
     private static final Long BRAND_ID = 1L;
@@ -25,8 +24,7 @@ class PriceControllerTest {
 
     private ResultActions performGet(String applicationDate, Long productId) throws Exception {
         String url = String.format("/prices/products/%d/brands/%d", productId, BRAND_ID);
-        return mockMvc.perform(get(url)
-                .param("applicationDate", applicationDate));
+        return mockMvc.perform(get(url).param("applicationDate", applicationDate));
     }
 
     @Test
@@ -118,11 +116,13 @@ class PriceControllerTest {
         result.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status", is("404")))
                 .andExpect(jsonPath("$.title", is("Price Not Found")))
-                .andExpect(jsonPath("$.detail",
-                        is(String.format("Price not found for applicationDate=%s, productId=%s, brandId=%s",
-                                applicationDate,
-                                nonExistingProductId,
-                                BRAND_ID))));
+                .andExpect(
+                        jsonPath(
+                                "$.detail",
+                                is(String.format("Price not found for applicationDate=%s, productId=%s, brandId=%s",
+                                        applicationDate,
+                                        nonExistingProductId,
+                                        BRAND_ID))));
     }
 
     @Test
