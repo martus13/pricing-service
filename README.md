@@ -14,50 +14,50 @@ This is a Java Spring Boot microservice exposing price-related operations. It in
 
 ```mermaid
 flowchart TD
-    A[Cliente REST] -->|"GET /prices/products/{productId}/brands/{brandId}?applicationDate=..."| B["Controlador REST (PriceController)"]
-    B --> C["Aplicación (PriceService)"]
-    C --> D["Repositorio (PriceRepositoryAdapter)"]
-    D --> E["Base de datos H2 (Tabla PRICES)"]
+    A[REST Client] -->|"GET /prices/products/{productId}/brands/{brandId}?applicationDate=..."| B["REST Controller (PriceController)"]
+    B --> C["Application (PriceService)"]
+    C --> D["Repository (PriceRepositoryAdapter)"]
+    D --> E["H2 Database (PRICES Table)"]
     E --> D
     D --> C
     C --> B
-    B -->|Response: product id, brand id, rate, dates, price| A
+    B -->|Response: product id, brand id, price list, dates, price| A
 ```
 
-**Descripción del flujo:**
-1. El cliente realiza una petición GET al endpoint `/prices` con los parámetros requeridos.
-2. El controlador REST recibe la petición y delega la lógica al servicio de aplicación.
-3. El servicio consulta el repositorio, que accede a la base de datos H2.
-4. Se selecciona el precio aplicable según las reglas de prioridad y fechas.
-5. Se devuelve la respuesta con los datos solicitados.
+**Flow description:**
+1. The client makes a GET request to the `/prices` endpoint with the required parameters.
+2. The REST controller receives the request and delegates the logic to the application service.
+3. The service queries the repository, which accesses the H2 database.
+4. The applicable price is selected according to priority and date rules.
+5. The response is returned with the requested data.
 
 ---
 
-### 2. Priorización de Requisitos (MoSCoW)
+### 2. Requirements Prioritization (MoSCoW)
 
-| Requisito                                                                 | Prioridad  | Justificación                                                                                 |
-|---------------------------------------------------------------------------|------------|----------------------------------------------------------------------------------------------|
-| Endpoint REST GET que acepte fecha, id de producto e id de cadena         | Must-have  | Es el núcleo funcional del servicio.                                                         |
-| Devolver: id producto, id cadena, tarifa, fechas de aplicación, precio    | Must-have  | Especificado como salida obligatoria.                                                        |
-| Base de datos en memoria H2, inicializada con los datos de ejemplo        | Must-have  | Permite pruebas y funcionamiento autónomo.                                                   |
-| Selección de tarifa por prioridad y rango de fechas                       | Must-have  | Lógica de negocio principal.                                                                 |
-| Pruebas de integración para los 5 casos del enunciado                     | Must-have  | Validación funcional y de negocio.                                                           |
-| Arquitectura hexagonal                                                    | Should-have| Mejora mantenibilidad y separación de capas.                                                 |
-| Claridad y calidad de código (SOLID, buenas prácticas)                    | Should-have| Facilita mantenimiento y escalabilidad.                                                      |
-| Documentación (README, requisitos, diagrama)                              | Should-have| Mejora la comprensión y validación del desarrollo.                                           |
-| Control de versiones (Git)                                                | Should-have| Buenas prácticas de desarrollo colaborativo.                                                 |
-| Eficiencia en la extracción de datos                                      | Could-have | Optimización, pero no bloqueante para la funcionalidad básica.                               |
-| Configuración externa (application.yaml, Dockerfile)                      | Could-have | Facilita despliegue y portabilidad.                                                          |
-| Devolver único resultado (no lista)                                       | Must-have  | Especificado en el enunciado.                                                                |
-| Validación formal de requisitos con el equipo/cliente                     | Must-have  | Evita malentendidos y asegura alineación de expectativas.                                    |
-| Ampliación a otros productos/cadenas/monedas                              | Won't-have | Fuera del alcance del enunciado actual.                                                      |
+| Requirement                                                              | Priority    | Justification                                                                              |
+|--------------------------------------------------------------------------|-------------|--------------------------------------------------------------------------------------------|
+| REST GET endpoint accepting date, product id, and brand id               | Must-have   | Core functionality of the service.                                                         |
+| Return: product id, brand id, price list, application dates, price       | Must-have   | Specified as mandatory output.                                                             |
+| In-memory H2 database initialized with sample data                       | Must-have   | Enables testing and standalone operation.                                                  |
+| Price selection by priority and date range                               | Must-have   | Main business logic.                                                                       |
+| Integration tests for the 5 cases in the statement                       | Must-have   | Functional and business validation.                                                        |
+| Hexagonal architecture                                                   | Should-have | Improves maintainability and layer separation.                                             |
+| Code clarity and quality (SOLID, best practices)                         | Should-have | Facilitates maintenance and scalability.                                                   |
+| Documentation (README, requirements, diagram)                            | Should-have | Improves understanding and validation of development.                                      |
+| Version control (Git)                                                    | Should-have | Good collaborative development practice.                                                   |
+| Data extraction efficiency                                               | Could-have  | Optimization, but not blocking for basic functionality.                                    |
+| External configuration (application.yaml, Dockerfile)                    | Could-have  | Facilitates deployment and portability.                                                    |
+| Return a single result (not a list)                                      | Must-have   | Specified in the statement.                                                                |
+| Formal validation of requirements with the team/client                   | Must-have   | Prevents misunderstandings and ensures alignment of expectations.                          |
+| Extension to other products/brands/currencies                            | Won't-have  | Out of scope for the current statement.                                                    |
 
 ---
 
-### 3. Validación Formal de Requisitos
+### 3. Formal Requirements Validation
 
-**Recomendación:**  
-Antes de continuar con la implementación, se debe revisar este documento con el equipo o cliente para confirmar que la interpretación y priorización de los requisitos es correcta y completa. Esto evitará malentendidos y permitirá alinear expectativas.
+**Recommendation:**  
+Before proceeding with implementation, this document should be reviewed with the team or client to confirm that the interpretation and prioritization of requirements is correct and complete. This will prevent misunderstandings and allow expectations to be aligned.
 
 ---
 
@@ -176,27 +176,27 @@ If you want any of the above, tell me which one and I'll implement it.
 
 ---
 
-## Análisis estático y linters (Docker)
+## Static analysis and linters (Docker)
 
-Este proyecto incluye un `Dockerfile` preparado para ejecutar análisis estático de código con las siguientes herramientas sobre Java 21:
+This project includes a `Dockerfile` prepared to run static code analysis with the following tools on Java 21:
 
 - PMD
 - Checkstyle
 - SpotBugs
 - Spotless
 
-### Requisitos
+### Requirements
 
-- Docker instalado
-- Código fuente en la raíz del proyecto (como está en este repositorio)
+- Docker installed
+- Source code at the root of the project (as in this repository)
 
-### Construir la imagen
+### Build the image
 
 ```sh
 docker build -t java-linters .
 ```
 
-### Lanzar el contenedor
+### Launch the container
 
 ```sh
 docker run --rm -it java-linters bash
@@ -204,16 +204,16 @@ docker run --rm -it java-linters bash
 
 ### PMD
 
-Analiza el código fuente con PMD:
+Analyze the source code with PMD:
 
 ```sh
 /opt/pmd/bin/run.sh pmd -d src/main/java -R rulesets/java/quickstart.xml -f text
 ```
-> Nota: El script `/opt/pmd/bin/pmd.bat` es solo para Windows. En el contenedor Linux, usa siempre `/opt/pmd/bin/run.sh`.
+> Note: The script `/opt/pmd/bin/pmd.bat` is for Windows only. In the Linux container, always use `/opt/pmd/bin/run.sh`.
 
 ### Checkstyle
 
-Verifica el estilo de código con Checkstyle:
+Check code style with Checkstyle:
 
 ```sh
 java -jar /opt/checkstyle.jar -c /app/google_checks.xml src/main/java
@@ -221,28 +221,28 @@ java -jar /opt/checkstyle.jar -c /app/google_checks.xml src/main/java
 
 ### SpotBugs
 
-Ahora SpotBugs se ejecuta directamente con Gradle, sin necesidad de Docker.
+Now SpotBugs runs directly with Gradle, no Docker needed.
 
-Primero, compila el proyecto (opcional, SpotBugs compila automáticamente si es necesario):
+First, build the project (optional, SpotBugs will compile automatically if needed):
 
 ```sh
 ./gradlew spotbugsMain
 ```
 
-El informe HTML estará disponible en `build/reports/spotbugs/main.html`.
+The HTML report will be available at `build/reports/spotbugs/main.html`.
 
-Para analizar los tests:
+To analyze the tests:
 ```sh
 ./gradlew spotbugsTest
 ```
-El informe estará en `build/reports/spotbugs/test.html`.
+The report will be at `build/reports/spotbugs/test.html`.
 
 ### Spotless
 
-Formatea el código automáticamente (si está configurado en `build.gradle`):
+Automatically format the code (if configured in `build.gradle`):
 
 ```sh
 ./gradlew spotlessApply
 ```
 
-Con estos comandos puedes ejecutar los linters principales sobre el código fuente del proyecto usando el contenedor Docker proporcionado.
+With these commands you can run the main linters on the project's source code using the provided Docker container.
