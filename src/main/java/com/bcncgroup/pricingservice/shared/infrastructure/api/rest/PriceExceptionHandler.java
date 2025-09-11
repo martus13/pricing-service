@@ -16,7 +16,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @ControllerAdvice
 public class PriceExceptionHandler {
 
-    @ExceptionHandler(value = PriceNotFoundException.class)
+    @ExceptionHandler(PriceNotFoundException.class)
     public ResponseEntity<ProblemDetails> handle(PriceNotFoundException e) {
         log.debug("Price not found", e);
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -27,7 +27,7 @@ public class PriceExceptionHandler {
                                 e.getMessage()));
     }
 
-    @ExceptionHandler(value = PriceBadRequestException.class)
+    @ExceptionHandler(PriceBadRequestException.class)
     public ResponseEntity<ProblemDetails> handle(PriceBadRequestException e) {
         log.debug("Bad request", e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -38,9 +38,9 @@ public class PriceExceptionHandler {
                                 e.getMessage()));
     }
 
-    @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ProblemDetails> handle(MethodArgumentTypeMismatchException e) {
-        log.debug(e.getMessage(), e);
+        log.debug("Invalid request parameters", e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(
                         new ProblemDetails(
@@ -49,9 +49,9 @@ public class PriceExceptionHandler {
                                 "The request has an invalid format"));
     }
 
-    @ExceptionHandler(value = MissingServletRequestParameterException.class)
+    @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ProblemDetails> handle(MissingServletRequestParameterException e) {
-        log.debug(e.getMessage(), e);
+        log.debug("Missing required request parameters", e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(
                         new ProblemDetails(
@@ -60,7 +60,7 @@ public class PriceExceptionHandler {
                                 "Missing required request parameters"));
     }
 
-    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ProblemDetails> handle(HttpRequestMethodNotSupportedException e) {
         log.warn("Method Not Allowed", e);
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
@@ -68,12 +68,13 @@ public class PriceExceptionHandler {
                         new ProblemDetails(
                                 String.valueOf(HttpStatus.METHOD_NOT_ALLOWED.value()),
                                 "Method Not Allowed",
-                                String.format("Request method '%s' not supported", e.getMethod())));
+                                String.format("Request method '%s' not supported",
+                                        e.getMethod())));
     }
 
-    @ExceptionHandler(value = IllegalArgumentException.class)
+    @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ProblemDetails> handle(IllegalArgumentException e) {
-        log.debug(e.getMessage(), e);
+        log.debug("Invalid request parameters", e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(
                         new ProblemDetails(
@@ -82,7 +83,7 @@ public class PriceExceptionHandler {
                                 "Invalid request parameters"));
     }
 
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetails> handle(Exception e) {
         log.error("Unhandled exception", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
