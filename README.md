@@ -1,26 +1,66 @@
 # Pricing Service
 
-A microservice for price management, built with Java and Spring Boot, following clean architecture and Domain-Driven Design (DDD) principles.
+An example microservice for price management.
+
+## Table of Contents
+- [Description](#description)
+- [Requirements](#requirements)
+- [Technologies](#technologies)
+- [Assumptions](#assumptions)
+- [Development prerequisites](#development-prerequisites)
+- [Build](#build)
+- [Run](#run)
+- [Configuration](#configuration)
+- [API Contract](#api-contract)
+- [API Documentation](#api-documentation)
+- [Tests](#tests)
+- [Architecture and Design Principles](#architecture-and-design-principles)
+- [Project structure](#project-structure)
+- [Static analysis and linters](#static-analysis-and-linters)
+- [Local best practices](#local-best-practices)
+- [Contributing](#contributing)
+- [Troubleshooting](#troubleshooting)
+- [Future improvements](#future-improvements)
+
+---
+## About
+This is a **Java Spring Boot microservice** exposing price-related operations.  
+It includes:
+- Persistence with H2 in-memory database
+- Data initialization scripts
+- OpenAPI specification (`docs/pricing-service-openapi-v1.0.0.yaml`)
+- Integration tests for the required business cases
 
 ---
 
-## About
+## Requirements
+
+See the [detailed requirements documentation](docs/requirements.md) for prioritization, justification, and the system flow diagram.
+
+**Key requirements summary:**
+- REST endpoint to query prices by date, product, and brand.
+- Price selection by priority and date range.
+- In-memory H2 database with sample data.
+- Integration tests for the 5 defined cases.
+
+---
 
 Pricing Service is a backend microservice designed to manage and expose price-related operations via a RESTful API. It demonstrates best practices in Java backend development, including layered architecture, modularity, and testability.
 
----
-
-## Features
-
-- Exposes REST endpoints for price queries and management
-- In-memory H2 database with auto-initialization scripts
-- OpenAPI 3.0 specification for contract-first development
-- Modular, testable, and extensible codebase
-- Example of clean architecture and DDD in Java
+- Java 21 + Spring Boot 3
+- Gradle (wrapper included)
+- H2 in-memory database
+- SQL initialization scripts: `src/main/resources/schema.sql` and `src/main/resources/data.sql`
 
 ---
 
-## Technologies Used
+## Assumptions
+
+- Project uses the Gradle wrapper (`gradlew` / `gradlew.bat`).
+- Examples are written for **Windows PowerShell**.
+- Main class: `com.bcncgroup.pricingservice.Application`.
+
+---
 
 - **Java 21**: Modern, high-performance JVM language.
 - **Spring Boot 3.5.5**: Framework for rapid development of production-ready Java applications.
@@ -33,128 +73,257 @@ Pricing Service is a backend microservice designed to manage and expose price-re
 - **MapStruct**: Code generator for mapping between Java bean types (DTOs, entities, domain models).
 - **JUnit Platform**: Modern testing framework for unit and integration tests.
 
----
-
-## Architecture
-
-The project follows a layered, modular architecture inspired by Clean Architecture and Domain-Driven Design (DDD):
-
-```
-src/
-└── main/
-    └── java/
-        └── com.bcncgroup.pricingservice/
-            ├── Application.java                # Spring Boot entry point
-            ├── prices/
-            │   ├── application/                # Application services (business logic)
-            │   │   └── port/in/                # Input ports (use cases)
-            │   ├── domain/                     # Domain models (entities, value objects)
-            │   └── infrastructure/
-            │       ├── api/rest/               # REST controllers and API mappers
-            │       └── persistence/jpa/        # JPA repositories, adapters, entity mappers
-            └── shared/                         # Shared exceptions, error models, utilities
-```
-
-**Key architectural concepts:**
-- **Domain Layer**: Contains core business logic and domain models, independent of frameworks.
-- **Application Layer**: Implements use cases and orchestrates domain logic.
-- **Infrastructure Layer**: Handles technical concerns (REST API, persistence, mapping).
-- **Ports & Adapters**: Follows hexagonal architecture, separating business logic from external systems.
-- **Exception Handling**: Centralized error handling for consistent API responses.
-
-**Configuration:**
-- Main config: `src/main/resources/application.yaml`
-- Database schema/data: `src/main/resources/schema.sql`, `data.sql`
-- OpenAPI spec: `docs/pricing-service-openapi-v1.0.0.yaml`
+- JDK 21 (recommended).
+- No global Gradle needed — use the included wrapper.
 
 ---
 
-## Getting Started
-
-### Prerequisites
-
-- JDK 21 installed
-- No need for a global Gradle installation (wrapper included)
-
-### Build
+## Build
 
 Open PowerShell in the project root and run:
-```
+
+```powershell
 .\gradlew.bat clean build
 ```
 The resulting JAR will be in `build\libs\`.
 
-### Run
+Jar will be generated in build\libs\.
 
-Option 1: Run via Gradle (development mode)
-```
+---
+
+## Run
+
+You can run the service in different ways:
+
+### Option A — Run with Gradle
+Runs the app directly from the Gradle process:
+
+```powershell
 .\gradlew.bat bootRun
 ```
-Option 2: Run the built JAR
+
+### Option B — Run the built artifact
+First, build the project:
+
+```powershell
+.\gradlew.bat clean build
 ```
+
+Then start the service with:
+```powershell
 java -jar build\libs\pricing-service-1.0.0.jar
 ```
 
-### Configuration
+### Option C — Run with Docker (optional)
+If you have Docker installed, you can build and run the image:
 
-- Main config: `src/main/resources/application.yaml`
-- Change DB or server port via `application.yaml` or environment variables
-- DB auto-initialized with `schema.sql` and `data.sql` (H2 in-memory by default)
+```powershell
+docker build -t pricing-service .
+docker run -p 8080:8080 pricing-service
+```
+The service will be available at http://localhost:8080
 
 ---
+
+## Configuration
+
+- The application can be configured using the file `src/main/resources/application.yaml`.
+- To change the database or the server port, edit `application.yaml` or provide environment variables.
+- The `schema.sql` and `data.sql` files in `src/main/resources/` are used to initialize the database where supported.
+
+---
+
+## API Contract
+
+- **Input:** REST HTTP requests with JSON bodies according to the OpenAPI spec in `docs/`.
+- **Output:** JSON responses with price data.
+- **Errors:** 4xx/5xx with JSON error details.
 
 ## API Documentation
 
-- OpenAPI 3.0 spec: `docs/pricing-service-openapi-v1.0.0.yaml`
-- Use with Swagger UI, Postman, or code generators
+- The OpenAPI specification is located in the `docs/` folder.  
+- It can be imported into Postman or visualized using Swagger UI at `http://localhost:8080/swagger-ui.html`.
+
+### **Example request/response:**
+This request fetches the price for product `35455` and brand `1` on a specific date.
+
+```sh
+curl -X GET 'http://localhost:8080/prices/products/35455/brands/1?applicationDate=2020-06-14T10:00:00Z'
+
+```
+
+Expected Response:
+
+```sh
+{
+  "productId": 35455,
+  "brandId": 1,
+  "priceList": 1,
+  "startDate": "2020-06-14T00:00:00Z",
+  "endDate": "2020-12-31T23:59:59Z",
+  "finalPrice": 35.50
+}
+```
+
+For a complete API definition, see the [OpenAPI specification](docs/pricing-service-openapi-v1.0.0.yaml).
 
 ---
 
-## Testing
+## Tests
 
 Run all tests:
-```
+
+```powershell
 .\gradlew.bat test
 ```
-Test reports: `build/reports/tests/test/index.html`
+Reports are generated in `build/reports/tests/test/index.html`.  
+
+Additional details can be found in [test strategy](docs/test-strategy.md) documentation.
 
 ---
 
-## Project Structure
+## Architecture and Design Principles
 
-- `src/main/java` — Java source code (see Architecture)
-- `src/main/resources` — configuration and SQL scripts
-- `build.gradle`, `gradlew`, `gradlew.bat` — build and wrapper
-- `docs/` — OpenAPI spec and additional docs
+The service follows a hexagonal architecture, separating concerns into layers:
+
+```mermaid
+flowchart TD
+    A[REST Client] -->|"GET /prices/products/{productId}/brands/{brandId}?applicationDate=..."| B["REST Controller (PriceController)"]
+    B --> C["Application (PriceService)"]
+    C --> D["Repository (PriceRepositoryAdapter)"]
+    D --> E["H2 Database (PRICES Table)"]
+    E --> D
+    D --> C
+    C --> B
+    B -->|Response: product id, brand id, price list, dates, price| A
+```
+
+**Main components:**
+- **REST Controller:** Receives HTTP requests and delegates to the application layer.
+- **Application Service:** Contains business logic for price selection.
+- **Repository Adapter:** Handles data access and persistence.
+- **Database:** Stores price data.
+
+### Key Design Decisions & Efficiency
+
+To ensure performance and scalability, the following principles were applied:
+
+- **Database-First Filtering:** The service delegates all filtering, sorting, and pagination logic directly to the database engine. This is crucial for optimal performance with large datasets. 
+- **Minimal Memory Footprint:** By crafting precise queries, only the necessary data is fetched from the database. No in-memory filtering or redundant loops are performed on the application side.
+- **Extensibility through Abstraction:** The use of interfaces (ports) and adapters allows for future optimizations, such as adding a caching layer, without altering the core business logic in the application service.
+
+---
+
+## Project structure
+
+- `src/main/java` — source code  
+- `src/main/resources` — configuration & SQL  
+- `docs/` — OpenAPI specification and additional documentation  
+- `build.gradle`, `gradlew*` — build system files  
+
+---
+
+## Static analysis and linters
+
+This project includes a `Dockerfile` prepared to run static code analysis with the following tools:
+
+- PMD
+- Checkstyle
+- SpotBugs
+- Spotless
+
+### Requirements
+
+- Docker installed
+- Source code at the root of the project (as in this repository)
+
+### Build the image
+
+```sh
+docker build -t java-linters .
+```
+
+### Launch the container
+
+```sh
+docker run --rm -it java-linters bash
+```
+
+### PMD
+
+Analyze the source code with PMD:
+
+```sh
+/opt/pmd/bin/run.sh pmd -d src/main/java -R rulesets/java/quickstart.xml -f text
+```
+> Note: The script `/opt/pmd/bin/pmd.bat` is for Windows only. In the Linux container, always use `/opt/pmd/bin/run.sh`.
+
+### Checkstyle
+
+Check code style with Checkstyle:
+
+```sh
+java -jar /opt/checkstyle.jar -c /app/google_checks.xml src/main/java
+```
+
+### SpotBugs
+
+Now SpotBugs runs directly with Gradle, no Docker needed.
+
+First, build the project (optional, SpotBugs will compile automatically if needed):
+
+```sh
+./gradlew spotbugsMain
+```
+
+The HTML report will be available at `build/reports/spotbugs/main.html`.
+
+To analyze the tests:
+```sh
+./gradlew spotbugsTest
+```
+The report will be at `build/reports/spotbugs/test.html`.
+
+### Spotless
+
+Automatically format the code (if configured in `build.gradle`):
+
+```sh
+./gradlew spotlessApply
+```
+
+With these commands you can run the main linters on the project's source code using the provided Docker container.
+
+---
+
+## Local best practices
+
+- Run `clean build` before opening a PR.
+- Keep tests green on the `develop` branch.
+- Update the OpenAPI specification when endpoints change.  
 
 ---
 
 ## Contributing
 
-1. Create a branch (`feature/...`, `fix/...`)
-2. Add/maintain tests for all changes
-3. Open a Pull Request targeting `develop` with a clear description
+1. Use clear branch names (`feature/...`, `fix/...`).  
+2. Add or update tests when making changes.  
+3. Open a pull request to the `develop` branch with a description and verification steps.  
 
 ---
 
 ## Troubleshooting
 
-- **Java not found**: Install JDK 21 and check with `java -version`
-- **Permissions**: Run PowerShell as Administrator or adjust execution policies
-- **Dependency issues**: Delete `.gradle` and run `.\gradlew.bat --refresh-dependencies`
+- Ensure Java 21 is installed and available in the system path.  
+- Ensure execution rights for the Gradle wrapper scripts.  
+- If dependencies cause issues, clear the Gradle cache and refresh them (`.\gradlew.bat --refresh-dependencies`).  
 
 ---
 
-## Quick Start
+## Future improvements
 
-This README is intended for local development and quick onboarding, especially on Windows PowerShell.
-
----
-
-## Notes
-
-- Build artifacts are in `build/libs/`
-- Test results are in `build/reports/tests/`
-- Update the OpenAPI spec when endpoints change
-
----
+- JWT authentication  
+- Replace H2 with PostgreSQL  
+- Docker Compose for quick startup  
+- Monitoring with Spring Boot Actuator  
+- Kubernetes deployment examples
