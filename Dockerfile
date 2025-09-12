@@ -25,4 +25,4 @@ RUN ./gradlew build --no-daemon
 EXPOSE 8080
 
 # Run the built jar by default
-CMD ["java", "-jar", "build/libs/pricing-service-1.0.0.jar"]
+CMD ["java", "-jar", "build/libs/pricing-service-2.0.0.jar"]
