@@ -122,6 +122,17 @@ docker run -p 8080:8080 pricing-service
 ```
 The service will be available at http://localhost:8080
 
+#### About the Dockerfile
+
+The provided `Dockerfile` builds the Java project using Gradle and packages it into a container image. It performs the following steps:
+- Uses the official OpenJDK 21 image as a base.
+- Copies all necessary project files and Gradle wrapper scripts.
+- Grants execution permissions to the Gradle wrapper.
+- Runs the Gradle build to generate the application JAR.
+- Sets the default command to run the service with `java -jar`.
+
+This allows you to build and run the service in a consistent, isolated environment using Docker.
+
 ---
 
 ## Configuration
