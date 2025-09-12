@@ -23,7 +23,9 @@ An example microservice for price management.
 - [Future improvements](#future-improvements)
 
 ---
-## About
+
+## Description
+
 This is a **Java Spring Boot microservice** exposing price-related operations.  
 It includes:
 - Persistence with H2 in-memory database
@@ -45,7 +47,7 @@ See the [detailed requirements documentation](docs/requirements.md) for prioriti
 
 ---
 
-Pricing Service is a backend microservice designed to manage and expose price-related operations via a RESTful API. It demonstrates best practices in Java backend development, including layered architecture, modularity, and testability.
+## Technologies
 
 - Java 21 + Spring Boot 3
 - Gradle (wrapper included)
@@ -62,16 +64,7 @@ Pricing Service is a backend microservice designed to manage and expose price-re
 
 ---
 
-- **Java 21**: Modern, high-performance JVM language.
-- **Spring Boot 3.5.5**: Framework for rapid development of production-ready Java applications.
-  - `spring-boot-starter-web`: For building RESTful web services.
-  - `spring-boot-starter-data-jpa`: For data persistence using JPA.
-- **Gradle**: Build automation tool (wrapper included).
-- **H2 Database**: Lightweight, in-memory database for development and testing.
-- **Lombok**: Reduces boilerplate code via annotations (e.g., getters/setters).
-- **JBoss Logging**: Logging framework required by Lombok's `@JBossLog`.
-- **MapStruct**: Code generator for mapping between Java bean types (DTOs, entities, domain models).
-- **JUnit Platform**: Modern testing framework for unit and integration tests.
+## Development prerequisites
 
 - JDK 21 (recommended).
 - No global Gradle needed — use the included wrapper.
@@ -92,7 +85,7 @@ Jar will be generated in `build\libs\`.
 
 ## Run
 
-You can run the service in different ways:
+Service can be started in different ways:
 
 ### Option A — Run with Gradle
 Runs the app directly from the Gradle process:
@@ -114,13 +107,13 @@ java -jar build\libs\pricing-service-1.0.0.jar
 ```
 
 ### Option C — Run with Docker (optional)
-If you have Docker installed, you can build and run the image:
+If Docker is available, the image can be built and run:
 
 ```powershell
 docker build -t pricing-service .
 docker run -p 8080:8080 pricing-service
 ```
-The service will be available at http://localhost:8080
+Service will be available at http://localhost:8080
 
 #### About the Dockerfile
 
@@ -131,7 +124,7 @@ The provided `Dockerfile` builds the Java project using Gradle and packages it i
 - Runs the Gradle build to generate the application JAR.
 - Sets the default command to run the service with `java -jar`.
 
-This allows you to build and run the service in a consistent, isolated environment using Docker.
+This allows building and running the service in a consistent, isolated environment using Docker.
 
 ---
 
@@ -159,7 +152,6 @@ This request fetches the price for product `35455` and brand `1` on a specific d
 
 ```sh
 curl -X GET 'http://localhost:8080/prices/products/35455/brands/1?applicationDate=2020-06-14T10:00:00Z'
-
 ```
 
 Expected Response:
