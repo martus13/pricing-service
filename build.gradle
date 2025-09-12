@@ -2,7 +2,6 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.5'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id 'com.github.spotbugs' version '6.0.15'
 }
 
 group = 'com.bcncgroup'
@@ -56,18 +55,4 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
-}
-
-spotbugs {
-	toolVersion = '4.8.3'
-	showProgress = true
-	reportLevel = com.github.spotbugs.snom.Confidence.values()[0]
-	reportsDir = file("$buildDir/reports/spotbugs")
-}
-
-tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
-	reports {
-		xml.required.set(false)
-		html.required.set(true)
-	}
 }

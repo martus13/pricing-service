@@ -85,9 +85,8 @@ Open PowerShell in the project root and run:
 ```powershell
 .\gradlew.bat clean build
 ```
-The resulting JAR will be in `build\libs\`.
 
-Jar will be generated in build\libs\.
+Jar will be generated in `build\libs\`.
 
 ---
 
@@ -220,79 +219,6 @@ To ensure performance and scalability, the following principles were applied:
 - `src/main/resources` — configuration & SQL  
 - `docs/` — OpenAPI specification and additional documentation  
 - `build.gradle`, `gradlew*` — build system files  
-
----
-
-## Static analysis and linters
-
-This project includes a `Dockerfile` prepared to run static code analysis with the following tools:
-
-- PMD
-- Checkstyle
-- SpotBugs
-- Spotless
-
-### Requirements
-
-- Docker installed
-- Source code at the root of the project (as in this repository)
-
-### Build the image
-
-```sh
-docker build -t java-linters .
-```
-
-### Launch the container
-
-```sh
-docker run --rm -it java-linters bash
-```
-
-### PMD
-
-Analyze the source code with PMD:
-
-```sh
-/opt/pmd/bin/run.sh pmd -d src/main/java -R rulesets/java/quickstart.xml -f text
-```
-> Note: The script `/opt/pmd/bin/pmd.bat` is for Windows only. In the Linux container, always use `/opt/pmd/bin/run.sh`.
-
-### Checkstyle
-
-Check code style with Checkstyle:
-
-```sh
-java -jar /opt/checkstyle.jar -c /app/google_checks.xml src/main/java
-```
-
-### SpotBugs
-
-Now SpotBugs runs directly with Gradle, no Docker needed.
-
-First, build the project (optional, SpotBugs will compile automatically if needed):
-
-```sh
-./gradlew spotbugsMain
-```
-
-The HTML report will be available at `build/reports/spotbugs/main.html`.
-
-To analyze the tests:
-```sh
-./gradlew spotbugsTest
-```
-The report will be at `build/reports/spotbugs/test.html`.
-
-### Spotless
-
-Automatically format the code (if configured in `build.gradle`):
-
-```sh
-./gradlew spotlessApply
-```
-
-With these commands you can run the main linters on the project's source code using the provided Docker container.
 
 ---
 

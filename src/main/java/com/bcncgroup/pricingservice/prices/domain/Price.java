@@ -16,12 +16,11 @@ import java.time.Instant;
  * @param currency Currency code.
  */
 public record Price(
-                Long brandId,
-                Instant startDate,
-                Instant endDate,
-                Long priceList,
-                Long productId,
-                Integer priority,
-                BigDecimal price,
-                String currency) {
-}
+        Long brandId,
+        Instant startDate,
+        Instant endDate,
+        Long priceList,
+        Long productId,
+        Integer priority,
+        BigDecimal price,
+        String currency) {}
