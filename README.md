@@ -23,7 +23,9 @@ An example microservice for price management.
 - [Future improvements](#future-improvements)
 
 ---
-## About
+
+## Description
+
 This is a **Java Spring Boot microservice** exposing price-related operations.  
 It includes:
 - Persistence with H2 in-memory database
@@ -45,7 +47,7 @@ See the [detailed requirements documentation](docs/requirements.md) for prioriti
 
 ---
 
-Pricing Service is a backend microservice designed to manage and expose price-related operations via a RESTful API. It demonstrates best practices in Java backend development, including layered architecture, modularity, and testability.
+## Technologies
 
 - Java 21 + Spring Boot 3
 - Gradle (wrapper included)
@@ -62,16 +64,7 @@ Pricing Service is a backend microservice designed to manage and expose price-re
 
 ---
 
-- **Java 21**: Modern, high-performance JVM language.
-- **Spring Boot 3.5.5**: Framework for rapid development of production-ready Java applications.
-  - `spring-boot-starter-web`: For building RESTful web services.
-  - `spring-boot-starter-data-jpa`: For data persistence using JPA.
-- **Gradle**: Build automation tool (wrapper included).
-- **H2 Database**: Lightweight, in-memory database for development and testing.
-- **Lombok**: Reduces boilerplate code via annotations (e.g., getters/setters).
-- **JBoss Logging**: Logging framework required by Lombok's `@JBossLog`.
-- **MapStruct**: Code generator for mapping between Java bean types (DTOs, entities, domain models).
-- **JUnit Platform**: Modern testing framework for unit and integration tests.
+## Development prerequisites
 
 - JDK 21 (recommended).
 - No global Gradle needed — use the included wrapper.
