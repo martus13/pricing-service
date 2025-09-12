@@ -85,7 +85,7 @@ Jar will be generated in `build\libs\`.
 
 ## Run
 
-You can run the service in different ways:
+Service can be started in different ways:
 
 ### Option A — Run with Gradle
 Runs the app directly from the Gradle process:
@@ -107,13 +107,13 @@ java -jar build\libs\pricing-service-1.0.0.jar
 ```
 
 ### Option C — Run with Docker (optional)
-If you have Docker installed, you can build and run the image:
+If Docker is available, the image can be built and run:
 
 ```powershell
 docker build -t pricing-service .
 docker run -p 8080:8080 pricing-service
 ```
-The service will be available at http://localhost:8080
+Service will be available at http://localhost:8080
 
 #### About the Dockerfile
 
@@ -124,7 +124,7 @@ The provided `Dockerfile` builds the Java project using Gradle and packages it i
 - Runs the Gradle build to generate the application JAR.
 - Sets the default command to run the service with `java -jar`.
 
-This allows you to build and run the service in a consistent, isolated environment using Docker.
+This allows building and running the service in a consistent, isolated environment using Docker.
 
 ---
 
@@ -152,7 +152,6 @@ This request fetches the price for product `35455` and brand `1` on a specific d
 
 ```sh
 curl -X GET 'http://localhost:8080/prices/products/35455/brands/1?applicationDate=2020-06-14T10:00:00Z'
-
 ```
 
 Expected Response:
