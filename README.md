@@ -1,202 +1,241 @@
 # Pricing Service
 
-Example microservice for price management (pricing-service).
+An example microservice for price management.
+
+## Table of Contents
+- [Description](#description)
+- [Requirements](#requirements)
+- [Technologies](#technologies)
+- [Assumptions](#assumptions)
+- [Development prerequisites](#development-prerequisites)
+- [Build](#build)
+- [Run](#run)
+- [Configuration](#configuration)
+- [API Contract](#api-contract)
+- [API Documentation](#api-documentation)
+- [Tests](#tests)
+- [Architecture and Design Principles](#architecture-and-design-principles)
+- [Project structure](#project-structure)
+- [Static analysis and linters](#static-analysis-and-linters)
+- [Local best practices](#local-best-practices)
+- [Contributing](#contributing)
+- [Troubleshooting](#troubleshooting)
+- [Future improvements](#future-improvements)
+
+---
 
 ## Description
 
-This is a Java Spring Boot microservice exposing price-related operations. It includes persistence, data initialization scripts and an OpenAPI specification located at `docs/pricing-service-openapi-v1.0.0.yaml`.
+This is a **Java Spring Boot microservice** exposing price-related operations.  
+It includes:
+- Persistence with H2 in-memory database
+- Data initialization scripts
+- OpenAPI specification (`docs/pricing-service-openapi-v1.0.0.yaml`)
+- Integration tests for the required business cases
 
 ---
 
-## Requirements Interpretation and Prioritization (MoSCoW)
+## Requirements
 
-### 1. Data Flow Diagram (DFD) / Blueprint
+See the [detailed requirements documentation](docs/requirements.md) for prioritization, justification, and the system flow diagram.
 
-```mermaid
-flowchart TD
-    A[Cliente REST] -->|"GET /prices/products/{productId}/brands/{brandId}?applicationDate=..."| B["Controlador REST (PriceController)"]
-    B --> C["Aplicación (PriceService)"]
-    C --> D["Repositorio (PriceRepositoryAdapter)"]
-    D --> E["Base de datos H2 (Tabla PRICES)"]
-    E --> D
-    D --> C
-    C --> B
-    B -->|Response: product id, brand id, rate, dates, price| A
-```
-
-**Descripción del flujo:**
-1. El cliente realiza una petición GET al endpoint `/prices` con los parámetros requeridos.
-2. El controlador REST recibe la petición y delega la lógica al servicio de aplicación.
-3. El servicio consulta el repositorio, que accede a la base de datos H2.
-4. Se selecciona el precio aplicable según las reglas de prioridad y fechas.
-5. Se devuelve la respuesta con los datos solicitados.
-
----
-
-### 2. Priorización de Requisitos (MoSCoW)
-
-| Requisito                                                                 | Prioridad  | Justificación                                                                                 |
-|---------------------------------------------------------------------------|------------|----------------------------------------------------------------------------------------------|
-| Endpoint REST GET que acepte fecha, id de producto e id de cadena         | Must-have  | Es el núcleo funcional del servicio.                                                         |
-| Devolver: id producto, id cadena, tarifa, fechas de aplicación, precio    | Must-have  | Especificado como salida obligatoria.                                                        |
-| Base de datos en memoria H2, inicializada con los datos de ejemplo        | Must-have  | Permite pruebas y funcionamiento autónomo.                                                   |
-| Selección de tarifa por prioridad y rango de fechas                       | Must-have  | Lógica de negocio principal.                                                                 |
-| Pruebas de integración para los 5 casos del enunciado                     | Must-have  | Validación funcional y de negocio.                                                           |
-| Arquitectura hexagonal                                                    | Should-have| Mejora mantenibilidad y separación de capas.                                                 |
-| Claridad y calidad de código (SOLID, buenas prácticas)                    | Should-have| Facilita mantenimiento y escalabilidad.                                                      |
-| Documentación (README, requisitos, diagrama)                              | Should-have| Mejora la comprensión y validación del desarrollo.                                           |
-| Control de versiones (Git)                                                | Should-have| Buenas prácticas de desarrollo colaborativo.                                                 |
-| Eficiencia en la extracción de datos                                      | Could-have | Optimización, pero no bloqueante para la funcionalidad básica.                               |
-| Configuración externa (application.yaml, Dockerfile)                      | Could-have | Facilita despliegue y portabilidad.                                                          |
-| Devolver único resultado (no lista)                                       | Must-have  | Especificado en el enunciado.                                                                |
-| Validación formal de requisitos con el equipo/cliente                     | Must-have  | Evita malentendidos y asegura alineación de expectativas.                                    |
-| Ampliación a otros productos/cadenas/monedas                              | Won't-have | Fuera del alcance del enunciado actual.                                                      |
-
----
-
-### 3. Validación Formal de Requisitos
-
-**Recomendación:**  
-Antes de continuar con la implementación, se debe revisar este documento con el equipo o cliente para confirmar que la interpretación y priorización de los requisitos es correcta y completa. Esto evitará malentendidos y permitirá alinear expectativas.
+**Key requirements summary:**
+- REST endpoint to query prices by date, product, and brand.
+- Price selection by priority and date range.
+- In-memory H2 database with sample data.
+- Integration tests for the 5 defined cases.
 
 ---
 
 ## Technologies
 
-- Java + Spring Boot
+- Java 21 + Spring Boot 3
 - Gradle (wrapper included)
+- H2 in-memory database
 - SQL initialization scripts: `src/main/resources/schema.sql` and `src/main/resources/data.sql`
-
-## Assumptions
-
-- The project uses the Gradle wrapper (`gradlew` / `gradlew.bat`).
-- You are working on Windows using PowerShell — commands below are tailored for that shell.
-- The main application class is `com.bcncgroup.pricingservice.Application` (inferred from the compiled classes).
-
-## API contract (brief)
-
-- Input: REST HTTP requests with JSON bodies according to the OpenAPI spec in `docs/`.
-- Output: JSON responses containing price resources and appropriate HTTP status codes.
-- Errors: 4xx/5xx responses with JSON error details.
-
-## Development prerequisites
-
-- JDK installed (Java 21 recommended).
-- No global Gradle installation required — use the included wrapper.
-
-## Build (PowerShell)
-
-Open PowerShell in the project root and run:
-
-```
-.\gradlew.bat clean build
-```
-
-The resulting jar will be available under `build\libs\`.
-
-## Run (PowerShell)
-
-Option A — run via Gradle (starts the app in the Gradle process):
-
-```
-.\gradlew.bat bootRun
-```
-
-Option B — run the built artifact:
-
-```
-java -jar build\libs\pricing-service-1.0.0.jar
-```
-
-## Configuration
-
-- Main configuration file: `src/main/resources/application.yaml`.
-- To change the database or the server port, edit `application.yaml` or provide environment variables.
-- The `schema.sql` and `data.sql` files in `src/main/resources/` are used to initialize the database where supported.
-
-## Tests
-
-Run the test suite with:
-
-```
-.\gradlew.bat test
-```
-
-Test reports are available at `build/reports/tests/test/index.html`.
-
-## API / Documentation
-
-- The OpenAPI spec is located at `docs/pricing-service-openapi-v1.0.0.yaml`.
-- Use it to generate clients or test endpoints with tools like Postman or Swagger UI.
-
-## Project structure (summary)
-
-- `src/main/java` — Java source code
-- `src/main/resources` — configuration and SQL scripts
-- `build.gradle`, `gradlew`, `gradlew.bat` — build and wrapper
-- `docs/` — OpenAPI spec and additional docs
-
-## Local best practices
-
-- Run `clean build` before opening a PR.
-- Keep tests green on the `develop` branch.
-- Update `docs/pricing-service-openapi-v1.0.0.yaml` when endpoints change.
-
-## Contributing
-
-1. Create a branch with a clear name (`feature/...`, `fix/...`).
-2. Add tests for functional changes.
-3. Open a Pull Request targeting `develop` and describe the purpose and verification steps.
-
-## Troubleshooting
-
-- If Java is missing: install JDK 21 and verify with `java -version`.
-- Permission issues: run PowerShell as Administrator or adjust execution policies.
-- Dependency problems: delete `.gradle` and run `.\gradlew.bat --refresh-dependencies`.
-
-## License & contact
-
-- Add the project license here (e.g. MIT) or list the contact person/team.
-
-## Quick verification
-
-- This README is intended to help local development and quick start on Windows PowerShell.
-
-## Notes
-
-- The repository already contains build artifacts in `build/libs/` and test results in `test-results/`.
-
-## Next steps I can do for you
-
-- Add endpoint examples (HTTP requests) extracted from the OpenAPI spec.
-- Create a Dockerfile and docker instructions.
-- Add a CI workflow (GitHub Actions) for build and tests.
-
-If you want any of the above, tell me which one and I'll implement it.
 
 ---
 
-## Análisis estático y linters (Docker)
+## Assumptions
 
-Este proyecto incluye un `Dockerfile` preparado para ejecutar análisis estático de código con las siguientes herramientas sobre Java 21:
+- Project uses the Gradle wrapper (`gradlew` / `gradlew.bat`).
+- Examples are written for **Windows PowerShell**.
+- Main class: `com.bcncgroup.pricingservice.Application`.
+
+---
+
+## Development prerequisites
+
+- JDK 21 (recommended).
+- No global Gradle needed — use the included wrapper.
+
+---
+
+## Build
+
+Open PowerShell in the project root and run:
+
+```powershell
+.\gradlew.bat clean build
+```
+
+Jar will be generated in build\libs\.
+
+---
+
+## Run
+
+You can run the service in different ways:
+
+### Option A — Run with Gradle
+Runs the app directly from the Gradle process:
+
+```powershell
+.\gradlew.bat bootRun
+```
+
+### Option B — Run the built artifact
+First, build the project:
+
+```powershell
+.\gradlew.bat clean build
+```
+
+Then start the service with:
+```powershell
+java -jar build\libs\pricing-service-1.0.0.jar
+```
+
+### Option C — Run with Docker (optional)
+If you have Docker installed, you can build and run the image:
+
+```powershell
+docker build -t pricing-service .
+docker run -p 8080:8080 pricing-service
+```
+The service will be available at http://localhost:8080
+
+---
+
+## Configuration
+
+- The application can be configured using the file `src/main/resources/application.yaml`.
+- To change the database or the server port, edit `application.yaml` or provide environment variables.
+- The `schema.sql` and `data.sql` files in `src/main/resources/` are used to initialize the database where supported.
+
+---
+
+## API Contract
+
+- **Input:** REST HTTP requests with JSON bodies according to the OpenAPI spec in `docs/`.
+- **Output:** JSON responses with price data.
+- **Errors:** 4xx/5xx with JSON error details.
+
+## API Documentation
+
+- The OpenAPI specification is located in the `docs/` folder.  
+- It can be imported into Postman or visualized using Swagger UI at `http://localhost:8080/swagger-ui.html`.
+
+### **Example request/response:**
+This request fetches the price for product `35455` and brand `1` on a specific date.
+
+```sh
+curl -X GET 'http://localhost:8080/prices/products/35455/brands/1?applicationDate=2020-06-14T10:00:00Z'
+
+```
+
+Expected Response:
+
+```sh
+{
+  "productId": 35455,
+  "brandId": 1,
+  "priceList": 1,
+  "startDate": "2020-06-14T00:00:00Z",
+  "endDate": "2020-12-31T23:59:59Z",
+  "finalPrice": 35.50
+}
+```
+
+For a complete API definition, see the [OpenAPI specification](docs/pricing-service-openapi-v1.0.0.yaml).
+
+---
+
+## Tests
+
+Run all tests:
+
+```powershell
+.\gradlew.bat test
+```
+Reports are generated in `build/reports/tests/test/index.html`.  
+
+Additional details can be found in [test strategy](docs/test-strategy.md) documentation.
+
+---
+
+## Architecture and Design Principles
+
+The service follows a hexagonal architecture, separating concerns into layers:
+
+```mermaid
+flowchart TD
+    A[REST Client] -->|"GET /prices/products/{productId}/brands/{brandId}?applicationDate=..."| B["REST Controller (PriceController)"]
+    B --> C["Application (PriceService)"]
+    C --> D["Repository (PriceRepositoryAdapter)"]
+    D --> E["H2 Database (PRICES Table)"]
+    E --> D
+    D --> C
+    C --> B
+    B -->|Response: product id, brand id, price list, dates, price| A
+```
+
+**Main components:**
+- **REST Controller:** Receives HTTP requests and delegates to the application layer.
+- **Application Service:** Contains business logic for price selection.
+- **Repository Adapter:** Handles data access and persistence.
+- **Database:** Stores price data.
+
+### Key Design Decisions & Efficiency
+
+To ensure performance and scalability, the following principles were applied:
+
+- **Database-First Filtering:** The service delegates all filtering, sorting, and pagination logic directly to the database engine. This is crucial for optimal performance with large datasets. 
+- **Minimal Memory Footprint:** By crafting precise queries, only the necessary data is fetched from the database. No in-memory filtering or redundant loops are performed on the application side.
+- **Extensibility through Abstraction:** The use of interfaces (ports) and adapters allows for future optimizations, such as adding a caching layer, without altering the core business logic in the application service.
+
+---
+
+## Project structure
+
+- `src/main/java` — source code  
+- `src/main/resources` — configuration & SQL  
+- `docs/` — OpenAPI specification and additional documentation  
+- `build.gradle`, `gradlew*` — build system files  
+
+---
+
+## Static analysis and linters
+
+This project includes a `Dockerfile` prepared to run static code analysis with the following tools:
 
 - PMD
 - Checkstyle
 - SpotBugs
 - Spotless
 
-### Requisitos
+### Requirements
 
-- Docker instalado
-- Código fuente en la raíz del proyecto (como está en este repositorio)
+- Docker installed
+- Source code at the root of the project (as in this repository)
 
-### Construir la imagen
+### Build the image
 
 ```sh
 docker build -t java-linters .
 ```
 
-### Lanzar el contenedor
+### Launch the container
 
 ```sh
 docker run --rm -it java-linters bash
@@ -204,16 +243,16 @@ docker run --rm -it java-linters bash
 
 ### PMD
 
-Analiza el código fuente con PMD:
+Analyze the source code with PMD:
 
 ```sh
 /opt/pmd/bin/run.sh pmd -d src/main/java -R rulesets/java/quickstart.xml -f text
 ```
-> Nota: El script `/opt/pmd/bin/pmd.bat` es solo para Windows. En el contenedor Linux, usa siempre `/opt/pmd/bin/run.sh`.
+> Note: The script `/opt/pmd/bin/pmd.bat` is for Windows only. In the Linux container, always use `/opt/pmd/bin/run.sh`.
 
 ### Checkstyle
 
-Verifica el estilo de código con Checkstyle:
+Check code style with Checkstyle:
 
 ```sh
 java -jar /opt/checkstyle.jar -c /app/google_checks.xml src/main/java
@@ -221,28 +260,62 @@ java -jar /opt/checkstyle.jar -c /app/google_checks.xml src/main/java
 
 ### SpotBugs
 
-Ahora SpotBugs se ejecuta directamente con Gradle, sin necesidad de Docker.
+Now SpotBugs runs directly with Gradle, no Docker needed.
 
-Primero, compila el proyecto (opcional, SpotBugs compila automáticamente si es necesario):
+First, build the project (optional, SpotBugs will compile automatically if needed):
 
 ```sh
 ./gradlew spotbugsMain
 ```
 
-El informe HTML estará disponible en `build/reports/spotbugs/main.html`.
+The HTML report will be available at `build/reports/spotbugs/main.html`.
 
-Para analizar los tests:
+To analyze the tests:
 ```sh
 ./gradlew spotbugsTest
 ```
-El informe estará en `build/reports/spotbugs/test.html`.
+The report will be at `build/reports/spotbugs/test.html`.
 
 ### Spotless
 
-Formatea el código automáticamente (si está configurado en `build.gradle`):
+Automatically format the code (if configured in `build.gradle`):
 
 ```sh
 ./gradlew spotlessApply
 ```
 
-Con estos comandos puedes ejecutar los linters principales sobre el código fuente del proyecto usando el contenedor Docker proporcionado.
+With these commands you can run the main linters on the project's source code using the provided Docker container.
+
+---
+
+## Local best practices
+
+- Run `clean build` before opening a PR.
+- Keep tests green on the `develop` branch.
+- Update the OpenAPI specification when endpoints change.  
+
+---
+
+## Contributing
+
+1. Use clear branch names (`feature/...`, `fix/...`).  
+2. Add or update tests when making changes.  
+3. Open a pull request to the `develop` branch with a description and verification steps.  
+
+---
+
+## Troubleshooting
+
+- Ensure Java 21 is installed and available in the system path.  
+- Ensure execution rights for the Gradle wrapper scripts.  
+- If dependencies cause issues, clear the Gradle cache and refresh them (`.\gradlew.bat --refresh-dependencies`).  
+
+---
+
+## Future improvements
+
+- JWT authentication  
+- Replace H2 with PostgreSQL  
+- Docker Compose for quick startup  
+- Monitoring with Spring Boot Actuator  
+- Kubernetes deployment examples
