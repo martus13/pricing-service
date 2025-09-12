@@ -2,7 +2,7 @@
 
 ## 1. Data Flow Diagram (DFD) / Blueprint
 
-El diagrama de flujo de datos y la arquitectura del sistema se encuentran en el [README.md](../README.md#architecture-and-design-principles).
+The data flow diagram and the system architecture can be found in the [README.md](../README.md#architecture-and-design-principles).
 
 ---
 

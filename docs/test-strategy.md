@@ -32,16 +32,12 @@ This document outlines the test strategy for the Pricing Service microservice. T
 
 - **JUnit 5:** Main testing framework.
 - **Mockito:** Dependency mocking.
-- **Jacoco:** Code coverage measurement.
-- **SonarQube:** Static analysis for quality and security.
-- **CI/CD (GitHub Actions, Jenkins, GitLab CI, etc.):** Automated test execution and analysis.
 
 ## 4. Recommended Coverage
 
 - **Minimum recommended coverage:**  
   - Unit: ≥ 80% of lines and critical branches.
   - Integration: Coverage of main business flows.
-- **Code coverage periodically reviewed in SonarQube.**
 
 ## 5. Test Prioritization (RBT – Risk Based Testing)
 
@@ -52,20 +48,11 @@ This document outlines the test strategy for the Pricing Service microservice. T
   - Integrations with external systems.
 - Lower priority for accessory or low-impact code.
 
-## 6. Automation and CI/CD
+## 7. Peer Review
 
-- All unit and integration tests must run automatically on every push/pull request.
-- The CI/CD pipeline must:
-  - Run tests and static analysis.
-  - Block merges if tests fail or coverage drops.
-  - Generate coverage and quality reports.
-
-## 7. Static Analysis and Peer Review
-
-- **SonarQube** integrated in CI to detect code smells, bugs, and vulnerabilities.
 - **Peer review** required for every pull request:
   - Validate code and test quality.
-  - Review coverage and edge cases.
+  - Review edge cases.
 
 ## 8. Extensibility and Best Practices
 
@@ -75,24 +62,3 @@ This document outlines the test strategy for the Pricing Service microservice. T
 - Keep tests readable, independent, and fast.
 - Use descriptive names for test methods.
 - Avoid logic in test setup; use builders or factories for test data.
-
----
-
-## Visual Summary
-
-The following diagram summarizes the quality flow in the development cycle:
-
-```mermaid
-flowchart TD
-    A[Push/PR] --> B[CI/CD: Run tests]
-    B --> C{Tests OK?}
-    C -- No --> D[Fix errors]
-    C -- Yes --> E[Static analysis SonarQube]
-    E --> F{Quality OK?}
-    F -- No --> D
-    F -- Yes --> G[Peer review]
-    G --> H[Merge allowed]
-```
-
-**Explanation:**  
-Every change triggers automated tests and static analysis. Only if all tests pass and quality gates are met, the code is eligible for peer review and merging. This ensures that only high-quality, well-tested code is integrated into the main branch.

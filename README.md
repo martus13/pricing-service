@@ -79,13 +79,13 @@ Open PowerShell in the project root and run:
 .\gradlew.bat clean build
 ```
 
-Jar will be generated in build\libs\.
+Jar will be generated in `build\libs\`.
 
 ---
 
 ## Run
 
-You can run the service in different ways:
+Service can be started in different ways:
 
 ### Option A — Run with Gradle
 Runs the app directly from the Gradle process:
@@ -107,13 +107,24 @@ java -jar build\libs\pricing-service-1.0.0.jar
 ```
 
 ### Option C — Run with Docker (optional)
-If you have Docker installed, you can build and run the image:
+If Docker is available, the image can be built and run:
 
 ```powershell
 docker build -t pricing-service .
 docker run -p 8080:8080 pricing-service
 ```
-The service will be available at http://localhost:8080
+Service will be available at http://localhost:8080
+
+#### About the Dockerfile
+
+The provided `Dockerfile` builds the Java project using Gradle and packages it into a container image. It performs the following steps:
+- Uses the official OpenJDK 21 image as a base.
+- Copies all necessary project files and Gradle wrapper scripts.
+- Grants execution permissions to the Gradle wrapper.
+- Runs the Gradle build to generate the application JAR.
+- Sets the default command to run the service with `java -jar`.
+
+This allows building and running the service in a consistent, isolated environment using Docker.
 
 ---
 
@@ -141,7 +152,6 @@ This request fetches the price for product `35455` and brand `1` on a specific d
 
 ```sh
 curl -X GET 'http://localhost:8080/prices/products/35455/brands/1?applicationDate=2020-06-14T10:00:00Z'
-
 ```
 
 Expected Response:
@@ -212,79 +222,6 @@ To ensure performance and scalability, the following principles were applied:
 - `src/main/resources` — configuration & SQL  
 - `docs/` — OpenAPI specification and additional documentation  
 - `build.gradle`, `gradlew*` — build system files  
-
----
-
-## Static analysis and linters
-
-This project includes a `Dockerfile` prepared to run static code analysis with the following tools:
-
-- PMD
-- Checkstyle
-- SpotBugs
-- Spotless
-
-### Requirements
-
-- Docker installed
-- Source code at the root of the project (as in this repository)
-
-### Build the image
-
-```sh
-docker build -t java-linters .
-```
-
-### Launch the container
-
-```sh
-docker run --rm -it java-linters bash
-```
-
-### PMD
-
-Analyze the source code with PMD:
-
-```sh
-/opt/pmd/bin/run.sh pmd -d src/main/java -R rulesets/java/quickstart.xml -f text
-```
-> Note: The script `/opt/pmd/bin/pmd.bat` is for Windows only. In the Linux container, always use `/opt/pmd/bin/run.sh`.
-
-### Checkstyle
-
-Check code style with Checkstyle:
-
-```sh
-java -jar /opt/checkstyle.jar -c /app/google_checks.xml src/main/java
-```
-
-### SpotBugs
-
-Now SpotBugs runs directly with Gradle, no Docker needed.
-
-First, build the project (optional, SpotBugs will compile automatically if needed):
-
-```sh
-./gradlew spotbugsMain
-```
-
-The HTML report will be available at `build/reports/spotbugs/main.html`.
-
-To analyze the tests:
-```sh
-./gradlew spotbugsTest
-```
-The report will be at `build/reports/spotbugs/test.html`.
-
-### Spotless
-
-Automatically format the code (if configured in `build.gradle`):
-
-```sh
-./gradlew spotlessApply
-```
-
-With these commands you can run the main linters on the project's source code using the provided Docker container.
 
 ---
 
