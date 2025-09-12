@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.bcncgroup'
-version = '0.0.1-SNAPSHOT'
+version = '2.0.0'
 description = 'Demo project for Spring Boot'
 
 java {
@@ -29,6 +29,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// Jakarta Validation API y Hibernate Validator
+	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+	implementation 'org.hibernate.validator:hibernate-validator:7.0.1.Final'
 
 	// Database
 	runtimeOnly 'com.h2database:h2'
