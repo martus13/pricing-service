@@ -119,7 +119,7 @@ class PriceControllerTest {
 
         // Assert
         result.andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status", is("404")))
+                .andExpect(jsonPath("$.status", is(404)))
                 .andExpect(jsonPath("$.title", is("Price Not Found")))
                 .andExpect(
                         jsonPath(
@@ -140,7 +140,7 @@ class PriceControllerTest {
 
         // Assert
         result.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status", is("400")))
-                .andExpect(jsonPath("$.title", is("Bad request")));
+                .andExpect(jsonPath("$.status", is(400)))
+                .andExpect(jsonPath("$.title", is("Invalid parameters")));
     }
 }
