@@ -30,7 +30,7 @@ This is a **Java Spring Boot microservice** exposing price-related operations.
 It includes:
 - Persistence with H2 in-memory database
 - Data initialization scripts
-- OpenAPI specification (`docs/pricing-service-openapi-v1.0.0.yaml`)
+- OpenAPI specification (`docs/pricing-service-openapi-v1.1.0.yaml`)
 - Integration tests for the required business cases
 
 ---
@@ -167,7 +167,7 @@ Expected Response:
 }
 ```
 
-For a complete API definition, see the [OpenAPI specification](docs/pricing-service-openapi-v1.0.0.yaml).
+For a complete API definition, see the [OpenAPI specification](docs/pricing-service-openapi-v1.1.0.yaml).
 
 ---
 

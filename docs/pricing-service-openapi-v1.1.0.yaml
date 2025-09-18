@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Pricing Service API
   description: REST API to manage pricing information for products.
-  version: 1.0.0
+  version: 1.1.0
 servers:
   - url: http://localhost:8080
 paths:
@@ -41,19 +41,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProblemDetails"
+                $ref: "#/components/schemas/ProblemDetail"
         "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProblemDetails"
+                $ref: "#/components/schemas/ProblemDetail"
         "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProblemDetails"
+                $ref: "#/components/schemas/ProblemDetail"
 components:
   schemas:
     PriceResponse:
@@ -91,7 +91,7 @@ components:
           description: The currency in which the price is specified.
           example: EUR
 
-    ProblemDetails:
+    ProblemDetail:
       type: object
       properties:
         status:
@@ -106,3 +106,7 @@ components:
           type: string
           description: A detailed explanation of the problem.
           example: No applicable price was found.
+        instance:
+          type: string
+          description: The problem instance.
+          example: /prices
