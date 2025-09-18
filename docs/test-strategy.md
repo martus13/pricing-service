@@ -26,7 +26,7 @@ This document outlines the test strategy for the Pricing Service microservice. T
 - **API Tests (optional):**  
   Validate the exposed REST endpoints.  
   *Tools:* MockMvc, RestAssured.  
-  *Example:* Test that the `/prices/products/{productId}/brands/{brandId}` endpoint responds correctly to different input scenarios.
+  *Example:* Test that the `/prices?applicationDate={applicationDate}&&productId={productId}&&brandId={brandId}` endpoint responds correctly to different input scenarios.
 
 ## 3. Tools
 

@@ -30,7 +30,11 @@ This is a **Java Spring Boot microservice** exposing price-related operations.
 It includes:
 - Persistence with H2 in-memory database
 - Data initialization scripts
+<<<<<<< HEAD
 - OpenAPI specification (`docs/pricing-service-openapi-v2.0.0.yaml`)
+=======
+- OpenAPI specification (`docs/pricing-service-openapi-v1.1.0.yaml`)
+>>>>>>> main
 - Integration tests for the required business cases
 
 ---
@@ -151,7 +155,11 @@ This allows building and running the service in a consistent, isolated environme
 This request fetches the price for product `35455` and brand `1` on a specific date.
 
 ```sh
+<<<<<<< HEAD
 curl -X GET 'http://localhost:8080/prices/products/35455/brands/1?applicationDate=2020-06-14T10:00:00Z'
+=======
+curl -X GET 'http://localhost:8080/prices?applicationDate=2020-06-14T10:00:00Z&&productId=35455&&brandId=1'
+>>>>>>> main
 ```
 
 Expected Response:
@@ -167,7 +175,11 @@ Expected Response:
 }
 ```
 
+<<<<<<< HEAD
 For a complete API definition, see the [OpenAPI specification](docs/pricing-service-openapi-v2.0.0.yaml).
+=======
+For a complete API definition, see the [OpenAPI specification](docs/pricing-service-openapi-v1.1.0.yaml).
+>>>>>>> main
 
 ---
 
@@ -190,7 +202,11 @@ The service follows a hexagonal architecture, separating concerns into layers:
 
 ```mermaid
 flowchart TD
+<<<<<<< HEAD
     A[REST Client] -->|"GET /prices/products/{productId}/brands/{brandId}?applicationDate=..."| B["REST Controller (PriceController)"]
+=======
+    A[REST Client] -->|"GET /prices?applicationDate=...&&productId=...&&brandId=..."| B["REST Controller (PriceController)"]
+>>>>>>> main
     B --> C["Application (PriceService)"]
     C --> D["Repository (PriceRepositoryAdapter)"]
     D --> E["H2 Database (PRICES Table)"]

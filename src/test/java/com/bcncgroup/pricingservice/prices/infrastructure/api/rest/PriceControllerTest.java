@@ -23,8 +23,13 @@ class PriceControllerTest {
     private static final String CURRENCY = "EUR";
 
     private ResultActions performGet(String applicationDate, Long productId) throws Exception {
-        String url = String.format("/prices/products/%d/brands/%d", productId, BRAND_ID);
-        return mockMvc.perform(get(url).param("applicationDate", applicationDate));
+        String url = "/prices";
+        return mockMvc.perform(
+                get(url)
+                        .param("applicationDate", applicationDate)
+                        .param("productId", productId.toString())
+                        .param("brandId", BRAND_ID.toString())
+        );
     }
 
     @Test
@@ -114,7 +119,7 @@ class PriceControllerTest {
 
         // Assert
         result.andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status", is("404")))
+                .andExpect(jsonPath("$.status", is(404)))
                 .andExpect(jsonPath("$.title", is("Price Not Found")))
                 .andExpect(
                         jsonPath(
@@ -135,7 +140,7 @@ class PriceControllerTest {
 
         // Assert
         result.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status", is("400")))
-                .andExpect(jsonPath("$.title", is("Bad request")));
+                .andExpect(jsonPath("$.status", is(400)))
+                .andExpect(jsonPath("$.title", is("Invalid parameters")));
     }
 }

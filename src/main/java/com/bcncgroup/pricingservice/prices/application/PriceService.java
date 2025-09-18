@@ -7,6 +7,7 @@ import com.bcncgroup.pricingservice.shared.domain.exceptions.PriceNotFoundExcept
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * Application service for finding applicable prices.
@@ -28,6 +29,7 @@ public class PriceService implements FindPriceUseCase {
      * @throws PriceNotFoundException if no price is found.
      */
     @Override
+    @Cacheable(value = "prices", key = "#brandId + '-' + #productId + '-' + #applicationDate.toString()")
     public Price findPrice(Instant applicationDate, Long productId, Long brandId) {
         return loadPricePort.loadApplicablePrice(applicationDate, productId, brandId)
                 .orElseThrow(() -> new PriceNotFoundException(
